@@ -3,10 +3,14 @@ const WebSocket = require('ws');
 
 class WS {
     constructor(server) {
-        this.ws = new WebSocket.Server({server})
+        let ws = new WebSocket.Server({server})
         this.client = null
         this.isConnected = false
-        this.ws.on('connection', (client) => {
+        this.checkForConnection(ws)
+    }
+
+    checkForConnection(ws){
+        ws.on('connection', (client) => {
             console.log('WebSocket connection...')
             this.client = client
             this.isConnected = true

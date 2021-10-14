@@ -25,6 +25,9 @@ app.post('/posts', (req, res) => {
   res.status(201).json(posts)
 })
 
+// INFLUX
+
+
 
 
 //MONGO

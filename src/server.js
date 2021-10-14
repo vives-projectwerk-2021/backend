@@ -1,9 +1,13 @@
 const express = require('express')
+const cors = require('cors')
 const http = require('http')
 const WS = require('./modules/websocket.js')
 
 const app = express()
 app.use(express.json()) 
+app.use(cors({
+  origin: 'http://localhost'
+}))
 const server = http.createServer(app)
 const ws = new WS(server)
 

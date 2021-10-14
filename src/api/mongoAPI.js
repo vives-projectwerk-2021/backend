@@ -9,8 +9,10 @@ class MongoAPI{
         this.url ="mongodb+srv://AaronVanV:M0ng0dAar0n@aaronvanv.ocujk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
         this.dbName= "Project"
         this.collection="accounts"
+        this.collection2="devices"
         this.client= new MongoClient(this.url)
         this.mongo=this.client.db(this.dbName).collection(this.collection)
+        this.mongo2=this.client.db(this.dbName).collection(this.collection2)
         
     }
     async connector(){
@@ -19,6 +21,8 @@ class MongoAPI{
         
            
     }
+
+    //ACCOUNTS
 
     async findAllUsers(){
 
@@ -54,6 +58,24 @@ class MongoAPI{
         await this.connector()
         return this.mongo.deleteOne({$and:[{username:username},{password:password}]})
     }
+
+
+    //DEVICES
+
+    async showAllDevices(){
+
+        await this.connector()
+        
+        return this.mongo2.find({}).toArray()
+
+        
+    }
+
+    async createDevice(name,location){
+        await this.connector()
+        return this.mongo2.insertOne({name:name,location:location})
+    }
+
 
   
     

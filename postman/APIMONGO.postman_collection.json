@@ -130,6 +130,55 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "POSTcreatedevice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Silles device\",\r\n    \"location\":\"Kortrijk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/mongo/createdevice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mongo",
+						"createdevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GETalldevices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/mongo/alldevices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"mongo",
+						"alldevices"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

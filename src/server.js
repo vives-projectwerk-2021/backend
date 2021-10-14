@@ -32,7 +32,7 @@ const MongoAPI =require('./api/mongoAPI')
 api= new MongoAPI();
 
 
-
+//ACCOUNTS
 app.get('/mongo/allusers', (req, res) => {
   api.findAllUsers().then( result => res.status(201).send(result))
   
@@ -64,6 +64,23 @@ app.post('/mongo/deleteuser',function (req, res) {
   const data = req.body
   api.deleteUser(data.username,data.password).then( result =>  res.status(201).json(result))
 })
+
+
+
+//DEVICES
+
+app.get('/mongo/alldevices', (req, res) => {
+  api.showAllDevices().then( result => res.status(201).send(result))
+  
+})
+
+app.post('/mongo/createdevice',function(req, res){
+  const data= req.body
+
+  api.createDevice(data.name,data.location).then(result=> res.status(201).json(result))
+})
+
+
 
 server.listen(3000, () => {
   console.log("Listening on port 3000")

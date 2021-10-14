@@ -26,8 +26,9 @@ app.post('/posts', (req, res) => {
 })
 
 // INFLUX
-
-
+  // Connecting to the Influx client
+const influxAPI = require('./api/influxAPI')
+api2 = new influxAPI();
 
 
 //MONGO

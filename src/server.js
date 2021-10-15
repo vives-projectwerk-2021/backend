@@ -86,7 +86,6 @@ app.get('/mongo/alldevices', (req, res) => {
 
 app.post('/mongo/createdevice',function(req, res){
   const data= req.body
-
   api.createDevice(data.name,data.location).then(result=> res.status(201).json(result))
 })
 

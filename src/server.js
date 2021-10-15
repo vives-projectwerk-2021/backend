@@ -32,7 +32,7 @@ app.post('/posts', (req, res) => {
 const influxAPI = require('./api/influxAPI')
 api2 = new influxAPI();
 
-app.get('/influx/sensors', (req, res) => {
+app.get('/sensors', (req, res) => {
   api2.readData().then( result => res.status(201).send(result))
 })
 

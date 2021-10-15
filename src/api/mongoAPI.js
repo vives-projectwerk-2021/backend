@@ -1,6 +1,7 @@
 const {MongoClient} = require ('mongodb');
 CryptoJS=require('crypto-js')
 
+require('dotenv').config()
 let client;
 
 class MongoAPI{
@@ -13,6 +14,7 @@ class MongoAPI{
         this.client= new MongoClient(this.url)
         this.mongoUsers=this.client.db(this.dbName).collection(this.users)
         this.mongoDevices=this.client.db(this.dbName).collection(this.devices)
+        
         
     }
     async connector(){

@@ -1,16 +1,11 @@
-FROM alpine:3.10
+FROM node:lts-alpine3.14
 
-RUN apk add --update nodejs npm
-
-# Copies your code file from your action repository to the filesystem path `/` of the container
 WORKDIR /app
 
+COPY package.json .
+RUN npm install
 COPY . .
 
-RUN npm install
-
-# EXPOSE 42069
 EXPOSE 3000
 
-# Code file to execute when the docker container starts up (`entrypoint.sh`)
 CMD ["node", "src/server.js"] 

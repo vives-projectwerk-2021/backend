@@ -13,4 +13,4 @@ RUN npm install
 EXPOSE 3000
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-CMD ["npm", "run", "dev"] 
+CMD ["node", "src/server.js"] 

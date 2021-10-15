@@ -5,9 +5,7 @@ const WS = require('./modules/websocket.js')
 
 const app = express()
 app.use(express.json()) 
-app.use(cors({
-  origin: 'http://localhost'
-}))
+app.use(cors())
 const server = http.createServer(app)
 const ws = new WS(server)
 
@@ -83,7 +81,7 @@ app.get('/mongo/alldevices', (req, res) => {
 
 app.post('/mongo/createdevice',function(req, res){
   const data= req.body
-
+  console.log(data)
   api.createDevice(data.name,data.location).then(result=> res.status(201).json(result))
 })
 

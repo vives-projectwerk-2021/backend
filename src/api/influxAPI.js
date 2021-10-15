@@ -1,7 +1,5 @@
 const {InfluxDB} = require('@influxdata/influxdb-client')
 
-const client = new InfluxDB({url: 'http://localhost:8086', token: this.token})
-
 class influxAPI {
     // Constructor for the influx class
     constructor() {
@@ -12,13 +10,14 @@ class influxAPI {
 
     async connector() {
         console.log("Connecting to the influxDB: " + this.org);
-        return this.client.connect();
+        this.client = new InfluxDB({url: 'http://localhost:8086', token: this.token});
+        this.queryApi = this.client.getQueryApi(this.org);
     }
 
     async writeData() {
         await this.connector();
         const {Point} = require('@influxdata/influxdb-client')
-        const writeApi = client.getWriteApi(org, bucket)
+        const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: 'host1'})
 
         const point = new Point('mem')

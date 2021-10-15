@@ -3,9 +3,9 @@ const {InfluxDB} = require('@influxdata/influxdb-client')
 class influxAPI {
     // Constructor for the influx class
     constructor() {
-        this.token = 'EvJBXGU1Jq1Qxh1djvZjysI8sInszlMY2fjwLSYfHdNhxt3o9Cpmd05qiNs3RLnL4QmKlQUWhVHq5SFMQ2eD9w=='
-        this.org = 'projectwerk-2021-pulu'
-        this.bucket = 'kokosnoothoofd'
+        this.token = `${process.env.INFLUX_API_CONNECTION_TOKEN}`
+        this.org = `${process.env.INFLUX_API_CONNECTION_ORG}`
+        this.bucket = `${process.env.INFLUX_API_CONNECTION_BUCKET}`
     }
 
     async connector() {

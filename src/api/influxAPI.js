@@ -10,7 +10,7 @@ class influxAPI {
 
     async connector() {
         console.log("Connecting to the influxDB: " + this.org);
-        this.client = new InfluxDB({url: 'http://localhost:8086', token: this.token});
+        this.client = new InfluxDB({url: process.env.INFLUX_API_CONNECTION_BASE_URL, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
     }
 

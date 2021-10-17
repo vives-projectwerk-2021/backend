@@ -28,8 +28,13 @@ app.post('/posts', (req, res) => {
 })
 
 // INFLUX
+  // Connecting to the Influx client
+const influxAPI = require('./api/influxAPI')
+api2 = new influxAPI();
 
-
+app.get('/sensors', (req, res) => {
+  api2.readData().then( result => res.status(201).send(result))
+})
 
 
 //MONGO
@@ -37,7 +42,7 @@ const MongoAPI =require('./api/mongoAPI')
 api= new MongoAPI();
 
 
-//ACCOUNTS
+  //ACCOUNTS
 app.get('/mongo/allusers', (req, res) => {
   api.findAllUsers().then( result => res.status(201).send(result))
   

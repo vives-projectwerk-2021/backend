@@ -7,19 +7,27 @@ let client;
 class MongoAPI{
     
     constructor(){
-        this.url =`${process.env.MONGO_API_CONNECTION_TOKEN}`
-        this.dbName= `${process.env.MONGO_DATABASE}`
-        this.users=`${process.env.MONGO_USERSCOLLECTION}`
-        this.devices=`${process.env.MONGO_DEVICESCOLLECTION}`
-        this.client= new MongoClient(this.url)
-        this.mongoUsers=this.client.db(this.dbName).collection(this.users)
-        this.mongoDevices=this.client.db(this.dbName).collection(this.devices)
+        this.url =`${process.env.MONGO_API_CONNECTION_TOKEN}`;
+        this.dbName= `${process.env.MONGO_DATABASE}`;
+        this.users=`${process.env.MONGO_USERSCOLLECTION}`;
+        this.devices=`${process.env.MONGO_DEVICESCOLLECTION}`;
+        this.client= "";
+        this.mongoUsers="";
+        this.mongoDevices="";
         
         
     }
     async connector(){
-        console.log('connecting to database: '+ this.dbName );
-        return this.client.connect()
+        try{
+            this.client= new MongoClient(this.url);
+            this.mongoUsers=this.client.db(this.dbName).collection(this.users);
+            this.mongoDevices=this.client.db(this.dbName).collection(this.devices);
+            console.log('connecting to database: '+ this.dbName );
+            return this.client.connect();
+        }catch(error){
+            console.log(error)
+        }
+       
         
            
     }
@@ -27,55 +35,80 @@ class MongoAPI{
     //ACCOUNTS
 
     async findAllUsers(){
-
-        await this.connector()
-        return this.mongoUsers.find({}).toArray()
+        try {
+            await this.connector()
+            return this.mongoUsers.find({}).toArray()
+        } catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
+        
     }
 
     async findUserByName(username,password){
-
-        await this.connector()
-        return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
+        try{
+            await this.connector()
+            return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
+        } catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
     }
 
     async createUser(username,password){
-        await this.connector()
-        const lol = await this.mongoUsers.findOne({username:username});
-        console.log(lol)
-        if(lol){
-            return Promise.resolve("Already exists")
-        }else{
-            return this.mongoUsers.insertOne({username:username,password:password})  
+        try{
+            await this.connector()
+            const lol = await this.mongoUsers.findOne({username:username});
+            console.log(lol)
+            if(lol){
+                return Promise.resolve("Already exists")
+            }else{
+                return this.mongoUsers.insertOne({username:username,password:password})  
+            }
+        } catch (error) {
+            return Promise.resolve("Error: "+error)
         }
     }
 
     async changePassword(username,password,newPassword){
-        
-        await this.connector()
-        return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
-            
+        try{
+            await this.connector()
+            return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
+        } catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
     }
 
     async deleteUser(username,password){
-        await this.connector()
-        return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
+        try{
+            await this.connector()
+            return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
+        } catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
     }
 
 
     //DEVICES
 
     async showAllDevices(){
-
-        await this.connector()
+        try{
+            await this.connector()
         
-        return this.mongoDevices.find({}).toArray()
+            return this.mongoDevices.find({}).toArray()
+        }
+        catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
 
         
     }
 
     async createDevice(name,location){
-        await this.connector()
-        return this.mongoDevices.insertOne({name:name,location:location})
+        try{
+            await this.connector()
+            return this.mongoDevices.insertOne({name:name,location:location})
+        }catch (error) {
+            return Promise.resolve("Error: "+error)
+        }
     }
 
 

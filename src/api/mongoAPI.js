@@ -39,7 +39,7 @@ class MongoAPI{
             await this.connector()
             return this.mongoUsers.find({}).toArray()
         } catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
         
     }
@@ -49,7 +49,7 @@ class MongoAPI{
             await this.connector()
             return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
         } catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
     }
 
@@ -57,14 +57,14 @@ class MongoAPI{
         try{
             await this.connector()
             const lol = await this.mongoUsers.findOne({username:username});
-            console.log(lol)
+            
             if(lol){
                 return Promise.resolve("Already exists")
             }else{
                 return this.mongoUsers.insertOne({username:username,password:password})  
             }
         } catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
     }
 
@@ -73,7 +73,7 @@ class MongoAPI{
             await this.connector()
             return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
         } catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
     }
 
@@ -82,7 +82,7 @@ class MongoAPI{
             await this.connector()
             return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
         } catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
     }
 
@@ -96,7 +96,7 @@ class MongoAPI{
             return this.mongoDevices.find({}).toArray()
         }
         catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
 
         
@@ -107,7 +107,7 @@ class MongoAPI{
             await this.connector()
             return this.mongoDevices.insertOne({name:name,location:location})
         }catch (error) {
-            return Promise.resolve("Error: "+error)
+            return Promise.reject("Error: "+error)
         }
     }
 

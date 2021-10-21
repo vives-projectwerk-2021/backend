@@ -11,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/allusers",
+					"raw": "http://localhost:3000/mongo/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -19,7 +19,7 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"allusers"
+						"users"
 					]
 				}
 			},
@@ -40,13 +40,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/mongo/login",
+					"raw": "localhost:3000/mongo/users/login",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"mongo",
+						"users",
 						"login"
 					]
 				}
@@ -59,7 +60,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/usersnumber",
+					"raw": "http://localhost:3000/mongo/users/amount",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -67,7 +68,8 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"usersnumber"
+						"users",
+						"amount"
 					]
 				}
 			},
@@ -80,7 +82,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"TESTER2\",\r\n   \"password\": \"TEST2\"\r\n}",
+					"raw": "{\r\n    \"username\":\"Aaron\",\r\n   \"password\": \"SOS\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +90,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/signup",
+					"raw": "http://localhost:3000/mongo/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -96,7 +98,7 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"signup"
+						"users"
 					]
 				}
 			},
@@ -117,7 +119,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/deleteuser",
+					"raw": "http://localhost:3000/mongo/users/delete",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -125,7 +127,8 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"deleteuser"
+						"users",
+						"delete"
 					]
 				}
 			},
@@ -138,7 +141,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Silles device\",\r\n    \"location\":\"Kortrijk\"\r\n}",
+					"raw": "{\r\n    \"name\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -146,7 +149,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/createdevice",
+					"raw": "http://localhost:3000/mongo/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -154,7 +157,7 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"createdevice"
+						"devices"
 					]
 				}
 			},
@@ -166,7 +169,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/alldevices",
+					"raw": "http://localhost:3000/mongo/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -174,7 +177,7 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"alldevices"
+						"devices"
 					]
 				}
 			},

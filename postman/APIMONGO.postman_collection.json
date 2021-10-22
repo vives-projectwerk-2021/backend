@@ -135,7 +135,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
+					"raw": "{\r\n    \"deviceid\":\"ID-TESTER\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -4,11 +4,7 @@ const http = require('http')
 const WS = require('./modules/websocket.js')
 
 const app = express()
-<<<<<<< HEAD
 app.use(express.json())
-=======
-app.use(express.json()) 
->>>>>>> 3f36f29cb6a2378eab776a6925eb0fb8a46343c2
 app.use(cors())
 const server = http.createServer(app)
 const ws = new WS(server)
@@ -47,11 +43,7 @@ api= new MongoAPI();
 
 
   //ACCOUNTS
-<<<<<<< HEAD
-app.get('/mongo/allusers', (req, res) => {
-=======
 app.get('/mongo/users', (req, res) => {
->>>>>>> 3f36f29cb6a2378eab776a6925eb0fb8a46343c2
   api.findAllUsers().then( result => res.status(201).send(result))
   
 })

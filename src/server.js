@@ -4,7 +4,11 @@ const http = require('http')
 const WS = require('./modules/websocket.js')
 
 const app = express()
+<<<<<<< HEAD
 app.use(express.json())
+=======
+app.use(express.json()) 
+>>>>>>> 3f36f29cb6a2378eab776a6925eb0fb8a46343c2
 app.use(cors())
 const server = http.createServer(app)
 const ws = new WS(server)
@@ -43,22 +47,26 @@ api= new MongoAPI();
 
 
   //ACCOUNTS
+<<<<<<< HEAD
 app.get('/mongo/allusers', (req, res) => {
+=======
+app.get('/mongo/users', (req, res) => {
+>>>>>>> 3f36f29cb6a2378eab776a6925eb0fb8a46343c2
   api.findAllUsers().then( result => res.status(201).send(result))
   
 })
 
-app.get('/mongo/usersnumber', (req, res) => {
+app.get('/mongo/users/amount', (req, res) => {
   api.findAllUsers().then( result => res.status(201).send([{amount:result.length}]))
   
 })
   
-app.post('/mongo/login',function (req, res) {
+app.post('/mongo/users/login',function (req, res) {
   const data = req.body
   api.findUserByName(data.username,data.password).then( result =>  res.status(201).json(result))
 })
 
-app.post('/mongo/signup',function(req, res) {
+app.post('/mongo/users',function(req, res) {
   const data = req.body
 
   api.createUser(data.username,data.password).then(result=>{
@@ -70,7 +78,7 @@ app.post('/mongo/signup',function(req, res) {
   })
 })
 
-app.post('/mongo/deleteuser',function (req, res) {
+app.post('/mongo/users/delete',function (req, res) {
   const data = req.body
   api.deleteUser(data.username,data.password).then( result =>  res.status(201).json(result))
 })
@@ -79,15 +87,19 @@ app.post('/mongo/deleteuser',function (req, res) {
 
 //DEVICES
 
-app.get('/mongo/alldevices', (req, res) => {
+app.get('/mongo/devices', (req, res) => {
   api.showAllDevices().then( result => res.status(201).send(result))
   
 })
 
-app.post('/mongo/createdevice',function(req, res){
+app.post('/mongo/devices',function(req, res){
   const data= req.body
-
-  api.createDevice(data.name,data.location).then(result=> res.status(201).json(result))
+  api.createDevice(data.name,data.location).then(result=> res.status(201).json(result)).catch(()=>{
+    res.status(500).send({
+        message:"Failed to write to JSON db",
+        code: 105
+    })
+})
 })
 
 

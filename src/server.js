@@ -71,7 +71,7 @@ app.post('/mongo/users',function(req, res) {
   })
 })
 
-app.post('/mongo/users/delete',function (req, res) {
+app.delete('/mongo/users',function (req, res) {
   const data = req.body
   api.deleteUser(data.username,data.password).then( result =>  res.status(201).json(result))
 })

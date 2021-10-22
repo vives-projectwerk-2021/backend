@@ -3,9 +3,10 @@ const {InfluxDB} = require('@influxdata/influxdb-client')
 class influxAPI {
     // Constructor for the influx class
     constructor() {
-        this.token = `${process.env.INFLUX_API_CONNECTION_TOKEN}`
-        this.org = `${process.env.INFLUX_API_CONNECTION_ORG}`
-        this.bucket = `${process.env.INFLUX_API_CONNECTION_BUCKET}`
+        this.token = `${process.env.INFLUX_API_CONNECTION_TOKEN}`;
+        this.org = `${process.env.INFLUX_API_CONNECTION_ORG}`;
+        this.bucket = `${process.env.INFLUX_API_CONNECTION_BUCKET}`;
+        console.log(this.token + this.org + this.bucket);
     }
 
     async connector() {

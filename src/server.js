@@ -91,7 +91,7 @@ app.get('/devices', (req, res) => {
 
 app.post('/devices',function(req, res){
   const data= req.body
-  api.createDevice(data.devicename,data.location,data.firstname,data.lastname).then(result=> res.status(201).json(result)).catch(()=>{
+  api.createDevice(data.deviceid,data.devicename,data.location,data.firstname,data.lastname).then(result=> res.status(201).json(result)).catch(()=>{
     res.status(500).send({
         message:"Failed to write to JSON db",
         code: 105

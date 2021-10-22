@@ -90,10 +90,10 @@ class users_db{
         
     }
 
-    async createDevice(devicename,location,firstname,lastname){
+    async createDevice(deviceid,devicename,location,firstname,lastname){
         
         await this.connector()
-        return this.mongoDevices.insertOne({devicename:devicename,location:location,firstname:firstname,lastname:lastname})
+        return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location,firstname:firstname,lastname:lastname})
        
     }
 

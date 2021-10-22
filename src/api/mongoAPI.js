@@ -35,80 +35,65 @@ class MongoAPI{
     //ACCOUNTS
 
     async findAllUsers(){
-        try {
-            await this.connector()
-            return this.mongoUsers.find({}).toArray()
-        } catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+       
+        await this.connector()
+        return this.mongoUsers.find({}).toArray()
+       
         
     }
 
     async findUserByName(username,password){
-        try{
-            await this.connector()
-            return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
-        } catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+        
+        await this.connector()
+        return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
+
     }
 
     async createUser(username,password){
-        try{
-            await this.connector()
-            const lol = await this.mongoUsers.findOne({username:username});
-            
-            if(lol){
-                return Promise.resolve("Already exists")
-            }else{
-                return this.mongoUsers.insertOne({username:username,password:password})  
-            }
-        } catch (error) {
-            return Promise.reject("Error: "+error)
+        
+        await this.connector()
+        const lol = await this.mongoUsers.findOne({username:username});
+        
+        if(lol){
+            return Promise.resolve("Already exists")
+        }else{
+            return this.mongoUsers.insertOne({username:username,password:password})  
         }
+        
     }
 
     async changePassword(username,password,newPassword){
-        try{
-            await this.connector()
-            return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
-        } catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+        
+        await this.connector()
+        return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
+        
     }
 
     async deleteUser(username,password){
-        try{
-            await this.connector()
-            return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
-        } catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+        
+        await this.connector()
+        return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
+        
     }
 
 
     //DEVICES
 
     async showAllDevices(){
-        try{
-            await this.connector()
         
-            return this.mongoDevices.find({}).toArray()
-        }
-        catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+        await this.connector()
+    
+        return this.mongoDevices.find({}).toArray()
+       
 
         
     }
 
     async createDevice(name,location){
-        try{
-            await this.connector()
-            return this.mongoDevices.insertOne({name:name,location:location})
-        }catch (error) {
-            return Promise.reject("Error: "+error)
-        }
+        
+        await this.connector()
+        return this.mongoDevices.insertOne({name:name,location:location})
+       
     }
 
 

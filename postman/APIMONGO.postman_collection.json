@@ -107,7 +107,7 @@
 		{
 			"name": "POSTdeleteuser",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -119,7 +119,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/users/delete",
+					"raw": "http://localhost:3000/mongo/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -127,8 +127,7 @@
 					"port": "3000",
 					"path": [
 						"mongo",
-						"users",
-						"delete"
+						"users"
 					]
 				}
 			},

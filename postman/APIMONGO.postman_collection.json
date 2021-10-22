@@ -11,14 +11,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/users",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"users"
 					]
 				}
@@ -40,13 +39,12 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/mongo/users/login",
+					"raw": "localhost:3000/users/login",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"users",
 						"login"
 					]
@@ -60,14 +58,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/users/amount",
+					"raw": "http://localhost:3000/users/amount",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"users",
 						"amount"
 					]
@@ -90,14 +87,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/users",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"users"
 					]
 				}
@@ -119,14 +115,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/users",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"users"
 					]
 				}
@@ -148,14 +143,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/devices",
+					"raw": "http://localhost:3000/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"devices"
 					]
 				}
@@ -168,14 +162,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/devices",
+					"raw": "http://localhost:3000/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
 						"devices"
 					]
 				}

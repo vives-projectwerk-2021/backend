@@ -44,22 +44,22 @@ let api= new users_db();
 
 
   //ACCOUNTS
-app.get('/mongo/users', (req, res) => {
+app.get('/users', (req, res) => {
   api.findAllUsers().then( result => res.status(201).send(result))
   
 })
 
-app.get('/mongo/users/amount', (req, res) => {
+app.get('/users/amount', (req, res) => {
   api.findAllUsers().then( result => res.status(201).send([{amount:result.length}]))
   
 })
   
-app.post('/mongo/users/login',function (req, res) {
+app.post('/users/login',function (req, res) {
   const data = req.body
   api.findUserByName(data.username,data.password).then( result =>  res.status(201).json(result))
 })
 
-app.post('/mongo/users',function(req, res) {
+app.post('/users',function(req, res) {
   const data = req.body
 
   api.createUser(data.username,data.password).then(result=>{
@@ -71,7 +71,7 @@ app.post('/mongo/users',function(req, res) {
   })
 })
 
-app.delete('/mongo/users',function (req, res) {
+app.delete('/users',function (req, res) {
   const data = req.body
   api.deleteUser(data.username,data.password).then( result =>  res.status(201).json(result))
 })
@@ -80,12 +80,12 @@ app.delete('/mongo/users',function (req, res) {
 
 //DEVICES
 
-app.get('/mongo/devices', (req, res) => {
+app.get('/devices', (req, res) => {
   api.showAllDevices().then( result => res.status(201).send(result))
   
 })
 
-app.post('/mongo/devices',function(req, res){
+app.post('/devices',function(req, res){
   const data= req.body
   api.createDevice(data.name,data.location).then(result=> res.status(201).json(result)).catch(()=>{
     res.status(500).send({
@@ -98,5 +98,5 @@ app.post('/mongo/devices',function(req, res){
 
 
 server.listen(config.server.port, () => {
-  console.log("Listening on port 3000")
+  console.log(`Listening on port ${config.server.port}`)
 })

@@ -2,7 +2,7 @@ import WebSocket from "ws";
 
 class WS {
     constructor(server) {
-        let ws = new WebSocket.Server({server})
+        let ws = new WebSocket({server})
         this.client = null
         this.isConnected = false
         this.checkForConnection(ws)

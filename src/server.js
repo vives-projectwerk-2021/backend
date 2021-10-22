@@ -4,13 +4,13 @@ import cors from "cors";
 import http from "http";
 import values_db from "./databases/values_db.js"
 import users_db from "./databases/users_db.js"
-//import WS from "./modules/websocket.js";
+import WS from "./modules/websocket.js";
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 const server = http.createServer(app)
-//const ws = new WS(server)
+const ws = new WS(server)
 
 const posts = []
 
@@ -26,7 +26,7 @@ app.get('/posts', (req, res) => {
 app.post('/posts', (req, res) => {
   const data = req.body
   posts.push(data)
-  //ws.webSocketSend(data)
+  ws.webSocketSend(data)
   res.status(201).json(posts)
 })
 
@@ -87,7 +87,7 @@ app.get('/devices', (req, res) => {
 
 app.post('/devices',function(req, res){
   const data= req.body
-  api.createDevice(data.name,data.location).then(result=> res.status(201).json(result)).catch(()=>{
+  api.createDevice(data.devicename,data.location,data.firstname,data.lastname).then(result=> res.status(201).json(result)).catch(()=>{
     res.status(500).send({
         message:"Failed to write to JSON db",
         code: 105

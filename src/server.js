@@ -4,13 +4,13 @@ import cors from "cors";
 import http from "http";
 import values_db from "./databases/values_db.js"
 import users_db from "./databases/users_db.js"
-import WS from "./modules/websocket.js";
+import WSS  from "./modules/websocket.js";
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 const server = http.createServer(app)
-const ws = new WS(server)
+const wss = new WSS(server)
 
 const posts = []
 
@@ -26,7 +26,7 @@ app.get('/posts', (req, res) => {
 app.post('/posts', (req, res) => {
   const data = req.body
   posts.push(data)
-  ws.webSocketSend(data)
+  wss.webSocketSend(data)
   res.status(201).json(posts)
 })
 
@@ -34,8 +34,12 @@ app.post('/posts', (req, res) => {
   // Connecting to the Influx client
 let api2 = new values_db();
 
+app.post('/data', (req, res) => {
+  api2.writeData().then( result => res.status(201).send(result));
+})
+
 app.get('/sensors', (req, res) => {
-  api2.readData().then( result => res.status(201).send(result))
+  api2.readData().then( result => res.status(200).send(result));
 })
 
 

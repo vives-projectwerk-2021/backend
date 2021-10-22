@@ -1,4 +1,5 @@
 import config from "../config/config.js"
+import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
 
 class values_db {
@@ -17,7 +18,6 @@ class values_db {
 
     async writeData() {
         await this.connector();
-        const {Point} = require('@influxdata/influxdb-client')
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: 'host1'})
 
@@ -40,8 +40,9 @@ class values_db {
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
               let rows = []
-              queryApi.queryRows(query, {
+              this.queryApi.queryRows(query, {
                 next(row, tableMeta) {
+                  console.log(row);
                   rows.push(tableMeta.toObject(row))
                 },
                 error(err) {
@@ -53,6 +54,9 @@ class values_db {
               })
             })
           }
+        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") |> range(start: -1h)`;
+        let rows = getRows(fluxQuery);
+        console.log(rows);
     }
     
 }

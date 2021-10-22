@@ -1,15 +1,15 @@
-import WebSocket from "ws";
+import { WebSocketServer } from "ws";
 
-class WS {
+class WSS {
     constructor(server) {
-        let ws = new WebSocket({server})
-        this.client = null
-        this.isConnected = false
-        this.checkForConnection(ws)
+        const wss = new WebSocketServer({server});
+        this.client = null;
+        this.isConnected = false;
+        this.checkForConnection(wss);
     }
 
-    checkForConnection(ws){
-        ws.on('connection', (client) => {
+    checkForConnection(wss){
+        wss.on('connection', (client) => {
             console.log('WebSocket connection...')
             this.client = client
             this.isConnected = true
@@ -26,4 +26,4 @@ class WS {
     }
 }
 
-export default WS;
+export default WSS;

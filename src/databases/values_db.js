@@ -1,12 +1,12 @@
-const {InfluxDB} = require('@influxdata/influxdb-client')
+import config from "../config/config.js"
+import { InfluxDB } from "@influxdata/influxdb-client";
 
-class influxAPI {
+class values_db {
     // Constructor for the influx class
     constructor() {
-        this.token = `${process.env.INFLUX_API_CONNECTION_TOKEN}`;
-        this.org = `${process.env.INFLUX_API_CONNECTION_ORG}`;
-        this.bucket = `${process.env.INFLUX_API_CONNECTION_BUCKET}`;
-        console.log(this.token + this.org + this.bucket);
+        this.token = `${config.values_db.token}`;
+        this.org = `${config.values_db.organization}`;
+        this.bucket = `${config.values_db.bucket}`;
     }
 
     async connector() {
@@ -57,4 +57,4 @@ class influxAPI {
     
 }
 
-module.exports = influxAPI;
+export default values_db;

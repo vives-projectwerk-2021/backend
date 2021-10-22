@@ -15,6 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/vives-webscripting-2020/examenopdracht-2021-noahdebaere.git"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",

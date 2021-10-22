@@ -1,16 +1,17 @@
-const {MongoClient} = require ('mongodb');
-CryptoJS=require('crypto-js')
+import config from "../config/config.js"
+import { MongoClient } from "mongodb";
+//import CryptoJS from "crypto-js";
 
-require('dotenv').config()
+
 let client;
 
-class MongoAPI{
+class users_db{
     
     constructor(){
-        this.url =`${process.env.MONGO_API_CONNECTION_TOKEN}`;
-        this.dbName= `${process.env.MONGO_DATABASE}`;
-        this.users=`${process.env.MONGO_USERSCOLLECTION}`;
-        this.devices=`${process.env.MONGO_DEVICESCOLLECTION}`;
+        this.url =`${config.users_db.token}`;
+        this.dbName= `${config.users_db.db}`;
+        this.users=`${config.users_db.ucoll}`;
+        this.devices=`${config.users_db.dcoll}`;
         this.client= "";
         this.mongoUsers="";
         this.mongoDevices="";
@@ -120,4 +121,4 @@ class MongoAPI{
     
 }
 
-module.exports = MongoAPI
+export default users_db;

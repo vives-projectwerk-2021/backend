@@ -1,5 +1,4 @@
-const { web } = require('webpack');
-const WebSocket = require('ws');
+import WebSocket from "ws";
 
 class WS {
     constructor(server) {
@@ -27,4 +26,4 @@ class WS {
     }
 }
 
-module.exports = WS
+export default WS;

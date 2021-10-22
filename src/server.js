@@ -1,13 +1,16 @@
-const express = require('express')
-const cors = require('cors')
-const http = require('http')
-const WS = require('./modules/websocket.js')
+import config from "./config/config.js";
+import express from "express";
+import cors from "cors";
+import http from "http";
+import values_db from "./databases/values_db.js"
+import users_db from "./databases/users_db.js"
+//import WS from "./modules/websocket.js";
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 const server = http.createServer(app)
-const ws = new WS(server)
+//const ws = new WS(server)
 
 const posts = []
 
@@ -23,14 +26,13 @@ app.get('/posts', (req, res) => {
 app.post('/posts', (req, res) => {
   const data = req.body
   posts.push(data)
-  ws.webSocketSend(data)
+  //ws.webSocketSend(data)
   res.status(201).json(posts)
 })
 
 // INFLUX
   // Connecting to the Influx client
-const influxAPI = require('./api/influxAPI')
-api2 = new influxAPI();
+let api2 = new values_db();
 
 app.get('/sensors', (req, res) => {
   api2.readData().then( result => res.status(201).send(result))
@@ -38,8 +40,7 @@ app.get('/sensors', (req, res) => {
 
 
 //MONGO
-const MongoAPI =require('./api/mongoAPI')
-api= new MongoAPI();
+let api= new users_db();
 
 
   //ACCOUNTS
@@ -70,7 +71,7 @@ app.post('/mongo/users',function(req, res) {
   })
 })
 
-app.post('/mongo/users/delete',function (req, res) {
+app.delete('/mongo/users',function (req, res) {
   const data = req.body
   api.deleteUser(data.username,data.password).then( result =>  res.status(201).json(result))
 })
@@ -96,6 +97,6 @@ app.post('/mongo/devices',function(req, res){
 
 
 
-server.listen(3000, () => {
+server.listen(config.server.port, () => {
   console.log("Listening on port 3000")
 })

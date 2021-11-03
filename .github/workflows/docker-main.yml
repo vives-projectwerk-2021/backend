@@ -29,7 +29,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/vives-projectwerk-2021/backend:main
+          tags: ghcr.io/vives-projectwerk-2021/backend:latest
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

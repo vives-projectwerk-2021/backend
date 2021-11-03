@@ -7,6 +7,7 @@ import users_db from "./databases/users_db.js"
 import WSS from "./modules/websocket.js";
 import { validate } from "jsonschema";
 import { AddSensorChecker } from "./validation/AddSensorChecker.js"
+import { DeviceDataChecker } from "./validation/DeviceDataChecker.js";
 
 const app = express()
 app.use(express.json())
@@ -25,8 +26,19 @@ app.get('/posts', (req, res) => {
   res.status(201).send(posts)
 })
 
+
+//Data coming from our devices in the field is send here to the frondend
 app.post('/posts', (req, res) => {
   const data = req.body
+  const validation = validate(data, DeviceDataChecker.create)
+  if (!validation.valid) {
+    console.log("The json validator where data from the devices is send to the front end gave an error: ",validation.errors)
+    res.status(400).send({
+      message: 'JSON validation failed',
+      details: validation.errors.map(e => e.stack)
+    })
+    return;
+  }
   posts.push(data)
   wss.webSocketSend(data)
   res.status(201).json(posts)

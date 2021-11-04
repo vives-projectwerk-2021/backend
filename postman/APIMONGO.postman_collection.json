@@ -101,7 +101,7 @@
 			"response": []
 		},
 		{
-			"name": "POSTdeleteuser",
+			"name": "DELETEuser",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -135,7 +135,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"deviceid\":\"ID-TESTER\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
+					"raw": "{\r\n    \"deviceid\":\"1212\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -161,6 +161,34 @@
 			"request": {
 				"method": "GET",
 				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/devices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETEdevice",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"deviceid\": \"1212\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:3000/devices",
 					"protocol": "http",

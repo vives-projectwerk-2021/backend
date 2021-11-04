@@ -97,6 +97,12 @@ class users_db{
        
     }
 
+    async deleteDevice(deviceid){
+        await this.connector()
+
+        return this.mongoDevices.deleteOne({deviceid:deviceid})
+    }
+
 
   
     

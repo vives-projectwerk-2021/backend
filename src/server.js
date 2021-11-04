@@ -123,6 +123,13 @@ app.post('/devices', function (req, res) {
   })
 })
 
+app.delete('/devices', function(req,res){
+  const data = req.body
+  api.deleteDevice(data.deviceid).then(result => res.status(201).json(result))
+
+
+})
+
 
 
 server.listen(config.server.port, () => {

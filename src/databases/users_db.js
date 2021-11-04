@@ -80,6 +80,12 @@ class users_db{
 
     //DEVICES
 
+    async getDeviceByID(deviceid){
+        await this.connector()
+
+        return this.mongoDevices.findOne({deviceid:deviceid})
+    }
+
     async showAllDevices(){
         
         await this.connector()
@@ -93,7 +99,15 @@ class users_db{
     async createDevice(deviceid,devicename,location,firstname,lastname){
         
         await this.connector()
-        return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location,firstname:firstname,lastname:lastname})
+
+        const checker = await this.mongoDevices.findOne({deviceid:deviceid});
+        
+        if(checker){
+            return Promise.resolve("Already exists")
+        }else{
+            return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location,firstname:firstname,lastname:lastname})
+ 
+        }
        
     }
 
@@ -101,6 +115,12 @@ class users_db{
         await this.connector()
 
         return this.mongoDevices.deleteOne({deviceid:deviceid})
+    }
+
+    async putDevice(deviceid,devicename,location,firstname,lastname){
+        await this.connector()
+
+        return this.mongoDevices.updateOne({deviceid:deviceid},{$set: {devicename:devicename,location:location,firstname:firstname,lastname:lastname}})
     }
 
 

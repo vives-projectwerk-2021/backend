@@ -103,6 +103,11 @@ app.get('/devices', (req, res) => {
 
 })
 
+app.get('/devices/:id', (req, res)=>{
+  const id= req.params.id
+  api.getDeviceByID(id).then(result => res.status(201).send(result))
+})
+
 //Here comes the data from the frond end to make a new device
 app.post('/devices', function (req, res) {
 
@@ -128,6 +133,12 @@ app.delete('/devices', function(req,res){
   api.deleteDevice(data.deviceid).then(result => res.status(201).json(result))
 
 
+})
+
+app.put('/devices',function(req,res){
+  const data = req.body
+
+  api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname).then(result => res.status(201).json(result))
 })
 
 

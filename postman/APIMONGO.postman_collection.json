@@ -11,15 +11,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/allusers",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"allusers"
+						"users"
 					]
 				}
 			},
@@ -40,13 +39,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/mongo/login",
+					"raw": "localhost:3000/users/login",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
+						"users",
 						"login"
 					]
 				}
@@ -59,15 +58,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/usersnumber",
+					"raw": "http://localhost:3000/users/amount",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"usersnumber"
+						"users",
+						"amount"
 					]
 				}
 			},
@@ -80,7 +79,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"TESTER2\",\r\n   \"password\": \"TEST2\"\r\n}",
+					"raw": "{\r\n    \"username\":\"Aaron\",\r\n   \"password\": \"SOS\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,24 +87,23 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/signup",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"signup"
+						"users"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "POSTdeleteuser",
+			"name": "DELETEuser",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -117,15 +115,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/deleteuser",
+					"raw": "http://localhost:3000/users",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"deleteuser"
+						"users"
 					]
 				}
 			},
@@ -138,7 +135,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Silles device\",\r\n    \"location\":\"Kortrijk\"\r\n}",
+					"raw": "{\r\n    \"deviceid\":\"1245\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -146,15 +143,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/mongo/createdevice",
+					"raw": "http://localhost:3000/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"createdevice"
+						"devices"
 					]
 				}
 			},
@@ -166,15 +162,90 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/mongo/alldevices",
+					"raw": "http://localhost:3000/devices",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"mongo",
-						"alldevices"
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETEdevice",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"deviceid\": \"1212\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/devices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUTdevice",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"deviceid\":\"1245\",\r\n    \"devicename\":\"NEW\",\r\n    \"location\":\"Oostende\",\r\n    \"firstname\":\"Bart\",\r\n    \"lastname\":\"Maes\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/devices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GETdeviceBYdeviceid",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/devices/1245",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"devices",
+						"1245"
 					]
 				}
 			},

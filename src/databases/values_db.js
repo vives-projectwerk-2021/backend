@@ -1,11 +1,13 @@
-const {InfluxDB} = require('@influxdata/influxdb-client')
+import config from "../config/config.js"
+import { Point } from "@influxdata/influxdb-client";
+import { InfluxDB } from "@influxdata/influxdb-client";
 
-class influxAPI {
+class values_db {
     // Constructor for the influx class
     constructor() {
-        this.token = `${process.env.INFLUX_API_CONNECTION_TOKEN}`
-        this.org = `${process.env.INFLUX_API_CONNECTION_ORG}`
-        this.bucket = `${process.env.INFLUX_API_CONNECTION_BUCKET}`
+        this.token = `${config.values_db.token}`;
+        this.org = `${config.values_db.organization}`;
+        this.bucket = `${config.values_db.bucket}`;
     }
 
     async connector() {
@@ -16,7 +18,6 @@ class influxAPI {
 
     async writeData() {
         await this.connector();
-        const {Point} = require('@influxdata/influxdb-client')
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: 'host1'})
 
@@ -39,8 +40,9 @@ class influxAPI {
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
               let rows = []
-              queryApi.queryRows(query, {
+              this.queryApi.queryRows(query, {
                 next(row, tableMeta) {
+                  console.log(row);
                   rows.push(tableMeta.toObject(row))
                 },
                 error(err) {
@@ -52,8 +54,11 @@ class influxAPI {
               })
             })
           }
+        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") |> range(start: -1h)`;
+        let rows = getRows(fluxQuery);
+        console.log(rows);
     }
     
 }
 
-module.exports = influxAPI;
+export default values_db;

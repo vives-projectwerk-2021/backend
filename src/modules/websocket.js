@@ -1,30 +1,31 @@
-const { web } = require('webpack');
-const WebSocket = require('ws');
+import WebSocket, { WebSocketServer } from "ws";
 
-class WS {
+class WSS {
     constructor(server) {
-        let ws = new WebSocket.Server({server})
-        this.client = null
-        this.isConnected = false
-        this.checkForConnection(ws)
+        const wss = new WebSocketServer({server});
+        this.clients = [];
+        this.checkForConnection(wss);
     }
 
-    checkForConnection(ws){
-        ws.on('connection', (client) => {
+    checkForConnection(wss){
+        wss.on('connection', (client) => {
             console.log('WebSocket connection...')
-            this.client = client
-            this.isConnected = true
-            this.webSocketSend({ message: "welcome", value: "Welcome using WebSocket"})
+            this.clients.push(client)
+            client.send(JSON.stringify({ message: "welcome", value: "Welcome using WebSocket"}))
         })
     }
 
     webSocketSend(data){
-        if (this.isConnected) {
-            this.client.send(JSON.stringify(data))
+        if (this.clients.length > 0) {
+            this.clients.forEach( (client) => {
+                if (client.readyState === WebSocket.OPEN){
+                    client.send(JSON.stringify(data));
+                }
+            });
         } else {
-            console.log("Unable to send to client: Client not connected.")
+            console.log("Unable to send to clients: No clients connected.")
         }
     }
 }
 
-module.exports = WS
+export default WSS;

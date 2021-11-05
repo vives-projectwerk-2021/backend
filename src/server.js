@@ -112,6 +112,7 @@ app.get('/devices/:id', (req, res)=>{
 app.post('/devices', function (req, res) {
 
   const data = req.body
+  console.log(data)
   const validation = validate(data, AddSensorChecker.create)
   if (!validation.valid) {
     res.status(400).send({

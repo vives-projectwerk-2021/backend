@@ -13,22 +13,23 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 const server = http.createServer(app)
-const wss = new WSS(server)
 
-const posts = []
+let resentLiveData = {}
+const wss = new WSS(server, resentLiveData)
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-  console.log("connected")
+
+app.get('/', (req, res) => {
+  res.send(`<h1>Connected to Pulu Backend</h1>
+            <p> Go to /live-data to see most recent device data</p>`)
 })
 
-app.get('/posts', (req, res) => {
-  res.status(201).send(posts)
+app.get('/live-data', (req, res) => {
+  res.status(201).send(resentLiveData)
 })
 
 
-//Data coming from our devices in the field is send here to the frondend
-app.post('/posts', (req, res) => {
+//Data coming from our devices in the field is send here to the frontend
+app.post('/live-data', (req, res) => {
   const data = req.body
   const validation = validate(data, DeviceDataChecker.create)
   if (!validation.valid) {
@@ -39,9 +40,9 @@ app.post('/posts', (req, res) => {
     })
     return;
   }
-  posts.push(data)
+  resentLiveData = data
   wss.webSocketSend(data)
-  res.status(201).json(posts)
+  res.status(201).json(resentLiveData)
 })
 
 // INFLUX
@@ -72,12 +73,12 @@ app.get('/users/amount', (req, res) => {
 
 })
 
-app.post('/users/login', function (req, res) {
+app.post('/users/login', (req, res) => {
   const data = req.body
   api.findUserByName(data.username, data.password).then(result => res.status(201).json(result))
 })
 
-app.post('/users', function (req, res) {
+app.post('/users', (req, res) => {
   const data = req.body
 
   api.createUser(data.username, data.password).then(result => {
@@ -89,7 +90,7 @@ app.post('/users', function (req, res) {
   })
 })
 
-app.delete('/users', function (req, res) {
+app.delete('/users', (req, res) => {
   const data = req.body
   api.deleteUser(data.username, data.password).then(result => res.status(201).json(result))
 })

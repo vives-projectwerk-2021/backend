@@ -34,22 +34,6 @@ const DeviceDataChecker = {
                             "status":{"type":"integer"},
                             "value":{"type":"integer"}
                         },
-                        "level5": {
-                            "status":{"type":"integer"},
-                            "value":{"type":"integer"}
-                        },
-                        "level6": {
-                            "status":{"type":"integer"},
-                            "value":{"type":"integer"}
-                        },
-                        "level7": {
-                            "status":{"type":"integer"},
-                            "value":{"type":"integer"}
-                        },
-                        "level8": {
-                            "status":{"type":"integer"},
-                            "value":{"type":"integer"}
-                        },
                     },
                     "temperature":{
                         "air":{

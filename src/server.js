@@ -65,17 +65,20 @@ let api = new users_db();
 //ACCOUNTS
 app.get('/users', (req, res) => {
   api.findAllUsers().then(result => res.status(201).send(result))
+  api.closeConnection()
 
 })
 
 app.get('/users/amount', (req, res) => {
   api.findAllUsers().then(result => res.status(201).send([{ amount: result.length }]))
+  api.closeConnection()
 
 })
 
 app.post('/users/login', (req, res) => {
   const data = req.body
   api.findUserByName(data.username, data.password).then(result => res.status(201).json(result))
+  api.closeConnection()
 })
 
 app.post('/users', (req, res) => {
@@ -88,11 +91,13 @@ app.post('/users', (req, res) => {
       res.status(201).json([{ message: "Success" }])
     }
   })
+  api.closeConnection()
 })
 
 app.delete('/users', (req, res) => {
   const data = req.body
   api.deleteUser(data.username, data.password).then(result => res.status(201).json(result))
+  api.closeConnection()
 })
 
 
@@ -101,12 +106,17 @@ app.delete('/users', (req, res) => {
 
 app.get('/devices', (req, res) => {
   api.showAllDevices().then(result => res.status(201).send(result))
+  api.closeConnection()
 
 })
 
 app.get('/devices/:id', (req, res)=>{
   const id= req.params.id
-  api.getDeviceByID(id).then(result => res.status(201).send(result))
+  api.getDeviceByID(id).then(result =>{
+    res.status(201).send(result)
+  } )
+  api.closeConnection()
+ 
 })
 
 //Here comes the data from the frond end to make a new device
@@ -128,12 +138,13 @@ app.post('/devices', function (req, res) {
       code: 105
     })
   })
+  api.closeConnection()
 })
 
 app.delete('/devices', function(req,res){
   const data = req.body
   api.deleteDevice(data.deviceid).then(result => res.status(201).json(result))
-
+  api.closeConnection()
 
 })
 
@@ -141,6 +152,7 @@ app.put('/devices',function(req,res){
   const data = req.body
 
   api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname).then(result => res.status(201).json(result))
+  api.closeConnection()
 })
 
 

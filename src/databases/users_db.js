@@ -23,7 +23,7 @@ class users_db{
             this.client= new MongoClient(this.url);
             this.mongoUsers=this.client.db(this.dbName).collection(this.users);
             this.mongoDevices=this.client.db(this.dbName).collection(this.devices);
-            console.log('connecting to database: '+ this.dbName );
+            console.log(Date.now()+': connecting to database: '+ this.dbName );
             return this.client.connect();
         }catch(error){
             console.log(error)
@@ -39,6 +39,8 @@ class users_db{
        
         await this.connector()
         return this.mongoUsers.find({}).toArray()
+
+        
        
         
     }
@@ -121,6 +123,11 @@ class users_db{
         await this.connector()
 
         return this.mongoDevices.updateOne({deviceid:deviceid},{$set: {devicename:devicename,location:location,firstname:firstname,lastname:lastname}})
+    }
+
+    async closeConnection(){
+        console.log(Date.now()+" : CLOSING CONNECTION")
+        return this.client.close()
     }
 
 

@@ -1,0 +1,66 @@
+name: Sandboxing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      pr: ${{ steps.meta.outputs.version }}
+      image: ${{ steps.meta.outputs.tags }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: docker/setup-buildx-action@v1
+    - uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: docker/metadata-action@v3
+      id: meta
+      with:
+        images: ghcr.io/vives-projectwerk-2021/pulu-backend
+        tags: type=ref,event=pr
+    - uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_DEPLOY_KEY }}
+        known_hosts: 'no-hosts'
+    - name: install pulu-cli
+      run: |
+        curl -L https://github.com/vives-projectwerk-2021/pulu-cli/releases/latest/download/pulu-linux -o /usr/local/bin/pulu
+        chmod +x /usr/local/bin/pulu
+    - id: sandbox
+      run: |
+        pulu exec staging "docker rm -f pulu-backend.${{ needs.build.outputs.pr }}"
+        export PULU_PORT=$(ruby -e 'require "socket"; puts Addrinfo.tcp("", 0).bind {|s| s.local_address.ip_port }')
+        pulu exec staging " \
+        docker run -t --name pulu-backend.${{ needs.build.outputs.pr }} --privileged \
+        -v /devops/.ssh/id_rsa:/root/.ssh/id_rsa \
+        -v /devops/deployment/staging/.env:/pulu.env \
+        -p $PULU_PORT:8080 \
+        -e PULU_BACKEND="${{ needs.build.outputs.image }}" \
+        ghcr.io/vives-projectwerk-2021/pulu-sandbox \
+        make production"
+
+        pulu exec staging "docker start pulu-backend.${{ needs.build.outputs.pr }}"
+
+        echo "::set-output name=PORT::$PULU_PORT"
+
+    - uses: thollander/actions-comment-pull-request@v1
+      with:
+        message: 'You can now proxy this deployment: `pulu proxy staging ${{ steps.sandbox.outputs.PORT }}`'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

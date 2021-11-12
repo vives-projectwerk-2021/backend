@@ -52,6 +52,7 @@ jobs:
         -v /devops/.ssh/id_rsa:/root/.ssh/id_rsa \
         -v /devops/deployment/staging/.env:/pulu.env \
         -p $PULU_PORT:8080 \
+        -e PULU_FRONTEND="ghcr.io/vives-projectwerk-2021/vue-frontend:latest" \
         -e PULU_BACKEND="${{ needs.build.outputs.image }}" \
         ghcr.io/vives-projectwerk-2021/pulu-sandbox \
         make production"

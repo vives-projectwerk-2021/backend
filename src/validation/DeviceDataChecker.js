@@ -9,9 +9,11 @@ const DeviceDataChecker = {
                 "time": { "type": "string","required":true },
                 "count": { "type": "integer","required":true },
                 "sensors": {
-                    "battery": {
-                        "status": { "type": "integer" },
-                        "value": { "type": "integer" }
+                    "voltage": {
+                        "battery": {
+                            "status":{ "type": "integer" },
+                            "value": { "type": "integer" }
+                        }
                     },
                     "light": {
                         "status": { "type": "integer" },
@@ -48,7 +50,8 @@ const DeviceDataChecker = {
                 },
                 "meta":{
                     "gateway_cnt":{"type":"integer"},
-                    "strongest_rssi":{"type":"integeer"}
+                    "strongest_rssi":{"type":"integer"},
+                    "strongest_gateway":{"type":"string"}
                 }
             }
         },

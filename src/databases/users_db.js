@@ -1,5 +1,6 @@
 import config from "../config/config.js"
 import { MongoClient } from "mongodb";
+
 //import CryptoJS from "crypto-js";
 
 
@@ -15,6 +16,11 @@ class users_db{
         this.client= "";
         this.mongoUsers="";
         this.mongoDevices="";
+        this.isConnected=false;
+
+        this.connector();
+
+         
         
         
     }
@@ -23,10 +29,12 @@ class users_db{
             this.client= new MongoClient(this.url);
             this.mongoUsers=this.client.db(this.dbName).collection(this.users);
             this.mongoDevices=this.client.db(this.dbName).collection(this.devices);
-            console.log('connecting to database: '+ this.dbName );
-            return this.client.connect();
+            console.log(Date.now()+': connecting to database: '+ this.dbName );
+            this.client.connect();
+            this.isConnected=true;
         }catch(error){
-            console.log(error)
+            console.log(Date.now()+" : "+error)
+            this.isConnected=false;
         }
        
         
@@ -37,22 +45,24 @@ class users_db{
 
     async findAllUsers(){
        
-        await this.connector()
+        this.ConnectionChecker()
         return this.mongoUsers.find({}).toArray()
+
+        
        
         
     }
 
     async findUserByName(username,password){
         
-        await this.connector()
+        this.ConnectionChecker()
         return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
 
     }
 
     async createUser(username,password){
         
-        await this.connector()
+        this.ConnectionChecker()
         const lol = await this.mongoUsers.findOne({username:username});
         
         if(lol){
@@ -65,14 +75,14 @@ class users_db{
 
     async changePassword(username,password,newPassword){
         
-        await this.connector()
+        this.ConnectionChecker()
         return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
         
     }
 
     async deleteUser(username,password){
         
-        await this.connector()
+        this.ConnectionChecker()
         return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
         
     }
@@ -81,14 +91,14 @@ class users_db{
     //DEVICES
 
     async getDeviceByID(deviceid){
-        await this.connector()
-
+         
+        this.ConnectionChecker()
         return this.mongoDevices.findOne({deviceid:deviceid})
     }
 
     async showAllDevices(){
         
-        await this.connector()
+        this.ConnectionChecker()
     
         return this.mongoDevices.find({}).toArray()
        
@@ -98,7 +108,7 @@ class users_db{
 
     async createDevice(deviceid,devicename,location,firstname,lastname){
         
-        await this.connector()
+        this.ConnectionChecker()
 
         const checker = await this.mongoDevices.findOne({deviceid:deviceid});
         
@@ -112,16 +122,44 @@ class users_db{
     }
 
     async deleteDevice(deviceid){
-        await this.connector()
-
+         
+        this.ConnectionChecker()
         return this.mongoDevices.deleteOne({deviceid:deviceid})
     }
 
     async putDevice(deviceid,devicename,location,firstname,lastname){
-        await this.connector()
-
+         
+        this.ConnectionChecker()
         return this.mongoDevices.updateOne({deviceid:deviceid},{$set: {devicename:devicename,location:location,firstname:firstname,lastname:lastname}})
     }
+
+    async closeConnection(){
+        console.log(Date.now()+" : CLOSING CONNECTION")
+        return this.client.close()
+    }
+
+    async ConnectionChecker(){
+
+        await this.client.db().admin().listDatabases()
+        .then(()=>{
+        
+            this.isConnected=true
+        })
+        .catch((error)=>{
+            this.isConnected=false
+            console.log( Date.now()+" :Connection with mongo: "+ this.isConnected)
+            console.log(Date.now()+" : "+ error)
+        })
+        
+        
+
+        if(!this.isConnected){
+            console.log( Date.now()+" :Connection with mongo: "+ this.isConnected)
+            this.connector()
+        }
+        
+    }
+
 
 
   

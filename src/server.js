@@ -50,16 +50,13 @@ app.post('/sensors', (req, res) => {
 
   console.log("This is my data: " + data)
 
+  // Writing the data to the database
+  //api2.writeData(data).then(result => res.status(201).send(result));
+
   // Making sure new connections always have some data
   recentLiveData = data
   wss.webSocketSend(data)
   res.status(201).json(recentLiveData)
-})
-
-
-
-app.post('/data', (req, res) => {
-  api2.writeData().then(result => res.status(201).send(result));
 })
 
 app.get('/sensors', (req, res) => {

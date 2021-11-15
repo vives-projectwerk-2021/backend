@@ -12,7 +12,7 @@ class values_db {
 
     async connector() {
         console.log("Connecting to the influxDB: " + this.org);
-        this.client = new InfluxDB({url: 'http://localhost:8086', token: this.token});
+        this.client = new InfluxDB({url: 'https://proxy-38239.trikthom.com', token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
     }
 
@@ -30,8 +30,8 @@ class values_db {
                 console.log('FINISHED')
             })
             .catch(e => {
-                console.error(e)
                 console.log('\\nFinished ERROR')
+                console.error(e)
             })
     }
 

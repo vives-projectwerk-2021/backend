@@ -61,8 +61,7 @@ app.get('/sensors', (req, res) => {
 //MONGO
 let api = new users_db();
 
-
-//ACCOUNTS
+  //ACCOUNTS
 app.get('/users', (req, res) => {
   api.findAllUsers().then(result => res.status(201).send(result))
    

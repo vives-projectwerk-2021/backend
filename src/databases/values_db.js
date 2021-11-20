@@ -22,18 +22,17 @@ class values_db {
         writeApi.useDefaultTags({host: data.data.device_id })
 
         // Writing the light values
-        const point = new Point('sensors')
+        writeApi.writePoint(new Point('sensors')
         .stringField('type', "Light")
         .intField('status', data.data.sensors.light.status)
-        .intField('light', data.data.sensors.light.value)
-        writeApi.writePoint(point)
+        .intField('light', data.data.sensors.light.value))
 
         // Writing the voltage values
-        const point = new Point('sensors')
+        writeApi.writePoint(new Point('sensors')
         .stringField('type', "Voltage")
         .stringField('part', "Battery")
         .intField('status', data.data.sensors.voltage.battery.status)
-        .intField('value', data.data.sensors.voltage.battery.value)
+        .intField('value', data.data.sensors.voltage.battery.value))
         writeApi
             .close()
             .then(() => {

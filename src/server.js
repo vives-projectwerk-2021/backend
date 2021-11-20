@@ -4,8 +4,9 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import values_db from "./databases/values_db.js"
-import users_db from "./databases/users_db.js"
 import WSS from "./modules/websocket.js";
+import DeviceRoute from "./routes/deviceRoute.js";
+import UserRoute from "./routes/userRoute.js";
 import { validate } from "jsonschema";
 import { AddSensorChecker } from "./validation/AddSensorChecker.js"
 import { DataChecker } from "./validation/DataChecker.js";
@@ -63,102 +64,21 @@ app.get('/sensors', (req, res) => {
   api2.readData().then(result => res.status(200).send(result));
 })
 
-
-//MONGO
-let api = new users_db();
-
-  //ACCOUNTS
-app.get('/users', (req, res) => {
-  api.findAllUsers().then(result => res.status(201).send(result))
-   
-
-})
-
-app.get('/users/amount', (req, res) => {
-  api.findAllUsers().then(result => res.status(201).send([{ amount: result.length }]))
-   
-
-})
-
-app.post('/users/login', (req, res) => {
-  const data = req.body
-  api.findUserByName(data.username, data.password).then(result => res.status(201).json(result))
-   
-})
-
-app.post('/users', (req, res) => {
-  const data = req.body
-
-  api.createUser(data.username, data.password).then(result => {
-    if (result == "Already exists") {
-      res.status(201).json([{ message: result }])
-    } else {
-      res.status(201).json([{ message: "Success" }])
-    }
-  })
-   
-})
-
-app.delete('/users', (req, res) => {
-  const data = req.body
-  api.deleteUser(data.username, data.password).then(result => res.status(201).json(result))
-   
-})
+//ACCOUNTS
+app.get('/users', UserRoute.list);
+app.get('/users/amount', UserRoute.get_amount);
+app.post('/users/login', UserRoute.login);
+app.post('/users', UserRoute.post);
+app.delete('/users', UserRoute.delete);
 
 
 
-//DEVICES
-
-app.get('/devices', (req, res) => {
-  api.showAllDevices().then(result => res.status(201).send(result))
-   
-
-})
-
-app.get('/devices/:id', (req, res)=>{
-  const id= req.params.id
-  api.getDeviceByID(id).then(result =>{
-    res.status(201).send(result)
-  } )
-   
- 
-})
-
-//Here comes the data from the frond end to make a new device
-app.post('/devices', function (req, res) {
-
-  const data = req.body
-  console.log(data)
-  const validation = validate(data, AddSensorChecker.create)
-  if (!validation.valid) {
-    res.status(400).send({
-      message: 'JSON validation failed',
-      details: validation.errors.map(e => e.stack)
-    })
-    return;
-  }
-  api.createDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname).then(result => res.status(201).json(result)).catch(() => {
-    res.status(500).send({
-      message: "Failed to write to JSON db",
-      code: 105
-    })
-  })
-   
-})
-
-app.delete('/devices', function(req,res){
-  const data = req.body
-  api.deleteDevice(data.deviceid).then(result => res.status(201).json(result))
-   
-
-})
-
-app.put('/devices',function(req,res){
-  const data = req.body
-
-  api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname).then(result => res.status(201).json(result))
-   
-})
+// Devices
+app.get('/devices', DeviceRoute.list);
+app.get('/devices/:id', DeviceRoute.get);
+app.post('/devices', DeviceRoute.post);
+app.delete('/devices', DeviceRoute.delete); // TODO change to REST
+app.put('/devices', DeviceRoute.put); // TODO change to REST
 
 
 

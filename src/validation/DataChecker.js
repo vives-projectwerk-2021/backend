@@ -1,4 +1,4 @@
-const DeviceDataChecker = {
+const DataChecker = {
 
     create: {
         "type": "object",
@@ -56,8 +56,8 @@ const DeviceDataChecker = {
             }
         },
         "additionalProperties": false
-        //first and last name are at the moment given with the addsensor but should not be necessery later when you have to loging to add sensors
+        //Other properties can be linked trough the device id
     }
 }
 
-export { DeviceDataChecker }
+export { DataChecker }

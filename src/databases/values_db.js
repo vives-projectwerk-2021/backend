@@ -12,14 +12,14 @@ class values_db {
 
     async connector() {
         console.log("Connecting to the influxDB: " + this.org);
-        this.client = new InfluxDB({url: 'http://localhost:8086', token: this.token});
+        this.client = new InfluxDB({url: 'influx:8086', token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
     }
 
-    async writeData() {
+    async writeData(data) {
         await this.connector();
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
-        writeApi.useDefaultTags({host: 'host1'})
+        writeApi.useDefaultTags({host: data.device_id})
 
         const point = new Point('mem')
         .floatField('used_percent', 23.43234543)
@@ -30,8 +30,8 @@ class values_db {
                 console.log('FINISHED')
             })
             .catch(e => {
-                console.error(e)
                 console.log('\\nFinished ERROR')
+                console.error(e)
             })
     }
 

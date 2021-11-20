@@ -36,7 +36,7 @@ class values_db {
 
         // Writing the temperature values
         writeApi.writePoint(new Point('temp')
-        .intField('air', data.data.sensors.temperature.air.value))
+        .floatField('air', data.data.sensors.temperature.air.value))
         writeApi
             .close()
             .then(() => {

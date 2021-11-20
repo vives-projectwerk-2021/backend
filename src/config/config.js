@@ -11,7 +11,7 @@ const config = {
         token: process.env.INFLUX_API_CONNECTION_TOKEN,
         organization: process.env.INFLUX_API_CONNECTION_ORG,
         bucket: process.env.INFLUX_API_CONNECTION_BUCKET,
-        baseURL: process.env.INFLUX_API_BASE_URL
+        baseURL: process.env.INFLUX_API_CONNECTION_BASE_URL
     },
 
     users_db: {

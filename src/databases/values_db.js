@@ -22,17 +22,21 @@ class values_db {
         writeApi.useDefaultTags({host: data.data.device_id })
 
         // Writing the light values
-        writeApi.writePoint(new Point('sensors')
+       /*  writeApi.writePoint(new Point('sensors')
         .stringField('type', "Light")
         .intField('status', data.data.sensors.light.status)
-        .intField('light', data.data.sensors.light.value))
+        .intField('light', data.data.sensors.light.value)) */
 
         // Writing the voltage values
-        writeApi.writePoint(new Point('sensors')
+        /* writeApi.writePoint(new Point('sensors')
         .stringField('type', "Voltage")
         .stringField('part', "Battery")
         .intField('status', data.data.sensors.voltage.battery.status)
-        .intField('value', data.data.sensors.voltage.battery.value))
+        .intField('value', data.data.sensors.voltage.battery.value)) */
+
+        // Writing the temperature values
+        writeApi.writePoint(new Point('temp')
+        .intField('air', data.data.sensors.temperature.air.value))
         writeApi
             .close()
             .then(() => {

@@ -49,10 +49,8 @@ app.post('/sensors', (req, res) => {
     return;
   }
 
-  console.log("This is my data: " + data)
-
   // Writing the data to the database
-  api2.writeData().then(result => res.status(201).send(result));
+  api2.writeData(data).then(result => res.status(201).send(result));
 
   // Making sure new connections always have some data
   recentLiveData = data

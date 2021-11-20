@@ -19,10 +19,10 @@ class values_db {
     async writeData(data) {
         await this.connector();
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
-        writeApi.useDefaultTags({host: "host1" })
+        writeApi.useDefaultTags({host: data.data.device_id })
 
-        const point = new Point('mem')
-        .floatField('used_percent', 23.43234543)
+        const point = new Point('sensors')
+        .floatField('light', data.data.sensors.light.value)
         writeApi.writePoint(point)
         writeApi
             .close()

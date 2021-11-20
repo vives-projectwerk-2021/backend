@@ -19,7 +19,7 @@ class values_db {
     async writeData(data) {
         await this.connector();
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
-        writeApi.useDefaultTags({host: data.device_id})
+        writeApi.useDefaultTags({host: "host1" })
 
         const point = new Point('mem')
         .floatField('used_percent', 23.43234543)

@@ -81,7 +81,7 @@ app.delete('/users', UserRoute.delete);
 app.get('/devices', DeviceRoute.list);
 app.get('/devices/:id', DeviceRoute.get);
 app.post('/devices', DeviceRoute.post);
-app.delete('/devices', DeviceRoute.delete); // TODO change to REST
+app.delete('/devices/:id', DeviceRoute.delete); // TODO change to REST
 app.put('/devices', DeviceRoute.put); // TODO change to REST
 
 

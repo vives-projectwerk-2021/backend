@@ -3,10 +3,14 @@ import config from "./config/config.js";
 import express from "express";
 import cors from "cors";
 import http from "http";
+import client from "prom-client"
 import values_db from "./databases/values_db.js"
 import WSS from "./modules/websocket.js";
 import DeviceRoute from "./routes/deviceRoute.js";
 import UserRoute from "./routes/userRoute.js";
+import MetricRoute from "./routes/metricRoute.js"
+
+
 import { validate } from "jsonschema";
 import { AddSensorChecker } from "./validation/AddSensorChecker.js"
 import { DataChecker } from "./validation/DataChecker.js";
@@ -19,7 +23,10 @@ const server = http.createServer(app)
 let recentLiveData = {}
 const wss = new WSS(server, recentLiveData)
 
+
+
 app.get('/', (req, res) => {
+
   res.send(`<h1>Connected to Pulu Backend</h1>
             <p> Go to /live-data to see most recent device data</p>`)
 })
@@ -71,8 +78,6 @@ app.post('/users/login', UserRoute.login);
 app.post('/users', UserRoute.post);
 app.delete('/users', UserRoute.delete);
 
-
-
 // Devices
 app.get('/devices', DeviceRoute.list);
 app.get('/devices/:id', DeviceRoute.get);
@@ -80,8 +85,9 @@ app.post('/devices', DeviceRoute.post);
 app.delete('/devices', DeviceRoute.delete); // TODO change to REST
 app.put('/devices', DeviceRoute.put); // TODO change to REST
 
-
+app.get('/metrics', MetricRoute.get);
 
 server.listen(config.server.port, () => {
   console.log(`Listening on port ${config.server.port}`)
 })
+

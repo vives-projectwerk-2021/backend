@@ -25,56 +25,56 @@ class values_db {
         let points = []
 
         // Writing the general data
-        points.push(Point("general")
+        points.push(new Point("general")
         .stringField("device_id", data.data.device_id)
         .floatField("count", data.data.count))
 
         // Writing the voltage values
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("voltage", "battery")
         .floatField("status", data.data.sensors.voltage.battery.status)
         .floatField("value", data.data.sensors.voltage.battery.value))
 
         // Writing the light values
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("type", "light")
         .floatField("status", data.data.sensors.light.status)
         .floatField("value", data.data.sensors.light.value))
 
         // Writing the moisture levels
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("moisture", "level1")
         .floatField("status", data.data.sensors.moisture.level1.status)
         .floatField("value", data.data.sensors.moisture.level1.value))
 
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("moisture", "level2")
         .floatField("status", data.data.sensors.moisture.level2.status)
         .floatField("value", data.data.sensors.moisture.level2.value))
 
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("moisture", "level3")
         .floatField("status", data.data.sensors.moisture.level3.status)
         .floatField("value", data.data.sensors.moisture.level3.value))
 
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("moisture", "level4")
         .floatField("status", data.data.sensors.moisture.level4.status)
         .floatField("value", data.data.sensors.moisture.level4.value))
 
         // Writing the temperature values
-        points.push(Point('sensors')
+        points.push(new Point('sensors')
         .tag("temperature", "air")
         .floatField("status", data.data.sensors.temperature.air.status)
         .floatField("value", data.data.sensors.temperature.air.value))
 
-        points.push(Point("sensors")
+        points.push(new Point("sensors")
         .tag("temperature", "ground")
         .floatField("status", data.data.sensors.temperature.ground.status)
         .floatField("value", data.data.sensors.temperature.ground.value))
 
         // Writing the meta data
-        points.push(Point("meta")
+        points.push(new Point("meta")
         .floatField("gateway_cnt", data.data.meta.gateway_cnt)
         .floatField("strongest_rssi", data.data.meta.strongest_rssi)
         .stringField("strongest_gateway", data.data.sensors.strongest_gateway))

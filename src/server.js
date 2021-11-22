@@ -84,6 +84,7 @@ app.post('/devices', DeviceRoute.post);
 app.delete('/devices', DeviceRoute.delete); // TODO change to REST
 app.put('/devices', DeviceRoute.put); // TODO change to REST
 
+
 app.get('/metrics', MetricRoute.get);
 
 server.listen(config.server.port, () => {

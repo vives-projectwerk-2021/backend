@@ -52,8 +52,8 @@ app.post('/sensors', (req, res) => {
 
   // Writing the data to the database
   api2.writeData(data)
-  .then(res.status(201)
-  .catch(e => console.error(e)))
+  .then(res.status(201))
+  .catch(e => console.error(e))
 
   // Making sure new connections always have some data
   recentLiveData = data

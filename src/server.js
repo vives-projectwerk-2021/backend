@@ -8,7 +8,6 @@ import WSS from "./modules/websocket.js";
 import DeviceRoute from "./routes/deviceRoute.js";
 import UserRoute from "./routes/userRoute.js";
 import { validate } from "jsonschema";
-import { AddSensorChecker } from "./validation/AddSensorChecker.js"
 import { DataChecker } from "./validation/DataChecker.js";
 
 const app = express()

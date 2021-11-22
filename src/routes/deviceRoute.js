@@ -41,9 +41,21 @@ const DeviceRoute = {
     },
     put: (req, res, next) => {
         const data = req.body;
+        const validation = validate(data, AddSensorChecker.create)
+        if (!validation.valid) {
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            })
+            return;
+        }
         api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result)) // TODO change status
     }
+
+}
+
+function validate(data,schema){
 
 }
 

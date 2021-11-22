@@ -34,34 +34,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    steps:
-    - uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_DEPLOY_KEY }}
-        known_hosts: 'no-hosts'
-    - name: install pulu-cli
-      run: |
-        curl -L https://github.com/vives-projectwerk-2021/pulu-cli/releases/latest/download/pulu-linux -o /usr/local/bin/pulu
-        chmod +x /usr/local/bin/pulu
-    - id: sandbox
-      run: |
-        pulu exec staging "docker rm -f pulu-backend.${{ needs.build.outputs.pr }}"
-        export PULU_PORT=$(ruby -e 'require "socket"; puts Addrinfo.tcp("", 0).bind {|s| s.local_address.ip_port }')
-        pulu exec staging " \
-        docker run -t --name pulu-backend.${{ needs.build.outputs.pr }} --privileged \
-        -v /devops/.ssh/id_rsa:/root/.ssh/id_rsa \
-        -v /devops/deployment/staging/.env:/pulu.env \
-        -p $PULU_PORT:8080 \
-        -e PULU_FRONTEND="ghcr.io/vives-projectwerk-2021/vue-frontend:latest" \
-        -e PULU_BACKEND="${{ needs.build.outputs.image }}" \
-        ghcr.io/vives-projectwerk-2021/pulu-sandbox \
-        make production"
-
-        pulu exec staging "docker start pulu-backend.${{ needs.build.outputs.pr }}"
-
-        echo "::set-output name=PORT::$PULU_PORT"
-
-    - uses: thollander/actions-comment-pull-request@v1
-      with:
-        message: 'You can now proxy this deployment: `pulu proxy staging ${{ steps.sandbox.outputs.PORT }}`'
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps: 
+      - name: composite action
+        uses: vives-projectwerk-2021/pulu-action@main
+        with: 
+          pulu_build: 'pulu-backend.${{ needs.build.outputs.pr }}'
+          ssh_deploy_key: ${{secrets.SSH_DEPLOY_KEY}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          image: ${{ needs.build.outputs.image }}
+          pulu_endpoint: 'PULU_BACKEND'

@@ -23,13 +23,14 @@ app.get('/', (req, res) => {
             <p> Go to /live-data to see most recent device data</p>`)
 })
 
-// INFLUX
+// Influx
 // Connecting to the Influx client
 let api2 = new values_db();
 
 
 app.get('/sensors', (req, res) => {
   res.status(201).send(recentLiveData)
+  // api2.readData().then(result => res.status(200).send(result));
 })
 
 
@@ -48,10 +49,10 @@ app.post('/sensors', (req, res) => {
     return;
   }
 
-  console.log("This is my data: " + data)
-
   // Writing the data to the database
-  //api2.writeData(data).then(result => res.status(201).send(result));
+  api2.writeData(data)
+  .then(res.status(201))
+  .catch(e => console.error(e))
 
   // Making sure new connections always have some data
   recentLiveData = data
@@ -59,18 +60,14 @@ app.post('/sensors', (req, res) => {
   res.status(201).json(recentLiveData)
 })
 
-app.get('/sensors', (req, res) => {
-  api2.readData().then(result => res.status(200).send(result));
-})
 
-//ACCOUNTS
+// Mongo
+// Accounts
 app.get('/users', UserRoute.list);
 app.get('/users/amount', UserRoute.get_amount);
 app.post('/users/login', UserRoute.login);
 app.post('/users', UserRoute.post);
 app.delete('/users', UserRoute.delete);
-
-
 
 // Devices
 app.get('/devices', DeviceRoute.list);
@@ -79,8 +76,7 @@ app.post('/devices', DeviceRoute.post);
 app.delete('/devices', DeviceRoute.delete); // TODO change to REST
 app.put('/devices', DeviceRoute.put); // TODO change to REST
 
-
-
+// Server
 server.listen(config.server.port, () => {
   console.log(`Listening on port ${config.server.port}`)
 })

@@ -129,7 +129,7 @@
 			"response": []
 		},
 		{
-			"name": "POSTcreatedevice",
+			"name": "POSTcreatesensor",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -141,7 +141,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"deviceid\":\"450\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
+					"raw": "{\r\n    \"deviceid\":\"500\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -149,21 +149,21 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/devices",
+					"raw": "http://localhost:3000/sensors",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"devices"
+						"sensors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "GETalldevices",
+			"name": "GETallsensors",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -190,21 +190,21 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/devices",
+					"raw": "http://localhost:3000/sensors",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"devices"
+						"sensors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "DELETEdevice",
+			"name": "DELETEsensor",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -218,22 +218,22 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/devices/4",
+					"raw": "http://localhost:3000/sensors/dQSLKJ",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"devices",
-						"4"
+						"sensors",
+						"dQSLKJ"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "PUTdevice",
+			"name": "PUTsensor",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -247,33 +247,33 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/devices",
+					"raw": "http://localhost:3000/sensors",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"devices"
+						"sensors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "GETdeviceBYdeviceid",
+			"name": "GETsensorBYdeviceid",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/devices/12",
+					"raw": "http://localhost:3000/sensors/12",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"devices",
+						"sensors",
 						"12"
 					]
 				}

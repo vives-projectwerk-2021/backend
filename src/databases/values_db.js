@@ -92,14 +92,13 @@ class values_db {
             })
     }
 
-    async readData() {
+    async readData(id) {
         await this.connector();
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
               let rows = []
               this.queryApi.queryRows(query, {
                 next(row, tableMeta) {
-                  console.log(row);
                   rows.push(tableMeta.toObject(row))
                 },
                 error(err) {
@@ -111,9 +110,14 @@ class values_db {
               })
             })
           }
-        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") |> range(start: -1h)`;
+        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
+        |> range(start: -1h) 
+        |> filter(fn: (r) => r["_measurement"] == "sensors")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["host"] == "${id}")`;
         let rows = getRows(fluxQuery);
-        console.log(rows);
+
+        return rows
     }
     
 }

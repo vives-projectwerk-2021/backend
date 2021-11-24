@@ -33,7 +33,7 @@ const DeviceRoute = {
                 info,
                 value
             }
-            console.log(sendsenor)
+            //console.log(sendsenor)        Too much logging
             res.status(200).send(sendsenor)
         }
     },

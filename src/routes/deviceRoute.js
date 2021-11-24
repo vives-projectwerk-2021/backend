@@ -58,8 +58,8 @@ const DeviceRoute = {
             })
     },
     delete: (req, res, next) => {
-        const data = req.body
-        api.deleteDevice(data.deviceid)
+        const data = req.params.id
+        api.deleteDevice(data)
             .then(result => res.status(201).json(result)) // TODO change status
     },
     put: (req, res, next) => {

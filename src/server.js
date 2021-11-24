@@ -3,10 +3,14 @@ import config from "./config/config.js";
 import express from "express";
 import cors from "cors";
 import http from "http";
+import client from "prom-client"
 import values_db from "./databases/values_db.js"
 import WSS from "./modules/websocket.js";
 import DeviceRoute from "./routes/deviceRoute.js";
 import UserRoute from "./routes/userRoute.js";
+import MetricRoute from "./routes/metricRoute.js"
+
+
 import { validate } from "jsonschema";
 import { AddSensorChecker } from "./validation/AddSensorChecker.js"
 import { DataChecker } from "./validation/DataChecker.js";
@@ -19,7 +23,10 @@ const server = http.createServer(app)
 let recentLiveData = {}
 const wss = new WSS(server, recentLiveData)
 
+
+
 app.get('/', (req, res) => {
+
   res.send(`<h1>Connected to Pulu Backend</h1>
             <p> Go to /live-data to see most recent device data</p>`)
 })
@@ -29,13 +36,13 @@ app.get('/', (req, res) => {
 let api2 = new values_db();
 
 
-app.get('/sensors', (req, res) => {
+app.get('/livedata', (req, res) => {
   res.status(201).send(recentLiveData)
   // api2.readData().then(result => res.status(200).send(result));
 })
 
 
-app.post('/sensors', (req, res) => {
+app.post('/livedata', (req, res) => {
   // Receiving the data from the device
   const data = req.body
 
@@ -70,14 +77,18 @@ app.post('/users/login', UserRoute.login);
 app.post('/users', UserRoute.post);
 app.delete('/users', UserRoute.delete);
 
-// Devices
-app.get('/devices', DeviceRoute.list);
-app.get('/devices/:id', DeviceRoute.get);
-app.post('/devices', DeviceRoute.post);
-app.delete('/devices', DeviceRoute.delete); // TODO change to REST
-app.put('/devices', DeviceRoute.put); // TODO change to REST
+// Sensors
+app.get('/sensors', DeviceRoute.list);
+app.get('/sensors/:id', DeviceRoute.get);
+app.post('/sensors', DeviceRoute.post);
+app.delete('/sensors/:id', DeviceRoute.delete); 
+app.put('/sensors', DeviceRoute.put); // TODO change to REST
+
+// Metrics
+app.get('/metrics', MetricRoute.get);
 
 // Server
 server.listen(config.server.port, () => {
   console.log(`Listening on port ${config.server.port}`)
 })
+

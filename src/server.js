@@ -84,9 +84,10 @@ app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
 app.put('/sensors', DeviceRoute.put); // TODO change to REST
 
-
+// Metrics
 app.get('/metrics', MetricRoute.get);
 
+// Server
 server.listen(config.server.port, () => {
   console.log(`Listening on port ${config.server.port}`)
 })

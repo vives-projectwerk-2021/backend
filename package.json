@@ -1,8 +1,8 @@
 {
   "name": "pulu-backend-2021",
-  "version": "1.0.0",
-  "description": "This is the project that serves as our exam for the Webscripting course from Vives Hogeschool Brugge.",
-  "main": "index.js",
+  "version": "1.1.0",
+  "description": "This project serves as the Projectwerk 2021 final project called Pulu. This backend is used to run all the so-called \"dirty work\" from our frontend.",
+  "main": "server.js",
   "scripts": {
     "start-server": "npm run dev:watch-server",
     "dev-server": "ts-node src/server_noah.ts",
@@ -14,16 +14,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vives-webscripting-2020/examenopdracht-2021-noahdebaere.git"
+    "url": "git+https://github.com/vives-projectwerk-2021/pulu-backend.git"
   },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vives-webscripting-2020/examenopdracht-2021-noahdebaere/issues"
+    "url": "https://github.com/vives-projectwerk-2021/pulu-backend/issues"
   },
-  "homepage": "https://github.com/vives-webscripting-2020/examenopdracht-2021-noahdebaere#readme",
+  "homepage": "https://github.com/vives-projectwerk-2021/pulu-backend#readme",
   "dependencies": {
     "@influxdata/influxdb-client": "^1.18.0",
     "axios": "^0.21.1",

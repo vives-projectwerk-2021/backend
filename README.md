@@ -1,15 +1,21 @@
-# backend
+# The PULU Project backend
 
-Dockerfile werkt
+## Installing the backend
 
-starten backend: npm run dev
+TODO
 
-## For dev
+## Running the backend
 
-git clone the project
+TODO
 
-npm install
+## Postman Requests
 
-add the .env file (ask software team)
+TODO
 
-npm run start
+## Versions
+
+TODO
+
+## Other
+
+TODO

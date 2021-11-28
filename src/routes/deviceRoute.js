@@ -14,6 +14,12 @@ const DeviceRoute = {
     },
     get: (req, res, next) => {
         const id = req.params.id
+        if (!id.length === 24) {
+            res.status(400).send({
+                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
+            })
+            return;
+        }
         const validation = validate(parseInt(id), paramsCecker.get)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
@@ -25,17 +31,17 @@ const DeviceRoute = {
         }
 
         send()
-        async function getInfo(){
-           let info = await api.getDeviceByID(id)
+        async function getInfo() {
+            let info = await api.getDeviceByID(id)
             return info
         }
 
         async function getValues() {
             let values = await api2.readData(id)
-                return values
+            return values
         }
 
-        async function send(){
+        async function send() {
             let info = await getInfo()
             let value = await getValues()
 
@@ -49,7 +55,12 @@ const DeviceRoute = {
     },
     post: (req, res, next) => {
         const data = req.body
-        console.log(data)
+        if (!id.length === 24) {
+            res.status(400).send({
+                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
+            })
+            return;
+        }
         const validation = validate(data, AddSensorChecker.create)
         console.log("The JSON validator gave an error: ", validation.errors)
         if (!validation.valid) {

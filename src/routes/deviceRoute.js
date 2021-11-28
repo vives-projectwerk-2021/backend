@@ -13,6 +13,13 @@ const DeviceRoute = {
     },
     get: (req, res, next) => {
         const id = req.params.id
+        let query= req.query
+
+        if(query.start==null){
+            query={
+                "start":"-1h"
+            }
+        }
 
         send()
         async function getInfo(){

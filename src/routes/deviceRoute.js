@@ -14,7 +14,7 @@ const DeviceRoute = {
     },
     get: (req, res, next) => {
         const id = req.params.id
-        const validation = validate(parsint(id), paramsCecker.get)
+        const validation = validate(parsInt(id), paramsCecker.get)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
             res.status(400).send({
@@ -70,7 +70,7 @@ const DeviceRoute = {
     },
     delete: (req, res, next) => {
         const data = req.params.id
-        const validation = validate(parsint(data), paramsCecker.delete)
+        const validation = validate(parsInt(data), paramsCecker.delete)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
             res.status(400).send({

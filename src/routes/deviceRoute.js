@@ -26,7 +26,7 @@ const DeviceRoute = {
             res.status(400).send({
                 message: 'JSON validation failed',
                 details: validation.errors.map(e => e.stack)
-            })
+            });
             return;
         }
 

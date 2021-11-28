@@ -1,5 +1,6 @@
 import users_db from "../databases/users_db.js"
 import { AddSensorChecker } from "../validation/AddSensorChecker.js"
+import { paramsCecker } from "../validation/paramsCecker.js";
 import { validate } from "jsonschema";
 import values_db from "../databases/values_db.js";
 
@@ -13,6 +14,15 @@ const DeviceRoute = {
     },
     get: (req, res, next) => {
         const id = req.params.id
+        const validation = validate(id, paramsCecker.get)
+        if (!validation.valid) {
+            console.log("The JSON validator gave an error: ", validation.errors)
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            })
+            return;
+        }
 
         send()
         async function getInfo(){
@@ -41,6 +51,7 @@ const DeviceRoute = {
         const data = req.body
         console.log(data)
         const validation = validate(data, AddSensorChecker.create)
+        console.log("The JSON validator gave an error: ", validation.errors)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',

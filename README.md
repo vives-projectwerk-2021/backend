@@ -1,23 +1,28 @@
-# backend
+# The PULU Project backend
 
-Dockerfile werkt
-
-starten backend: npm run dev
-
-## For dev
-
-Clone the project.
-
+## Installing the backend
 Install dependencies:
 
 ```zsh
 npm install
 ```
 
-add the .env file (ask software team)
-
+## Running the backend
 
 Use the folling command to start the backend:
 ```zsh
 npm run start
 ```
+
+## Postman Requests
+
+TODO
+
+
+## Versions
+
+TODO
+
+## Other
+
+TODO

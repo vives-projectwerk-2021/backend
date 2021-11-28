@@ -28,7 +28,7 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id)
+            let values = await api2.readData(id,query)
                 return values
         }
 

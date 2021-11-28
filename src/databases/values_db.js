@@ -92,7 +92,7 @@ class values_db {
             })
     }
 
-    async readData(id) {
+    async readData(id,info) {
         await this.connector();
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
@@ -111,7 +111,7 @@ class values_db {
             })
           }
         const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: -1h) 
+        |> range(start: ${info.start}) 
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["host"] == "${id}")`;

@@ -70,6 +70,15 @@ const DeviceRoute = {
     },
     delete: (req, res, next) => {
         const data = req.params.id
+        const validation = validate(data, paramsCecker.delete)
+        if (!validation.valid) {
+            console.log("The JSON validator gave an error: ", validation.errors)
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            })
+            return;
+        }
         api.deleteDevice(data)
             .then(result => res.status(201).json(result)) // TODO change status
     },
@@ -86,10 +95,6 @@ const DeviceRoute = {
         api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result)) // TODO change status
     }
-
-}
-
-function validate(data,schema){
 
 }
 

@@ -3,12 +3,11 @@ import config from "./config/config.js";
 import express from "express";
 import cors from "cors";
 import http from "http";
-import client from "prom-client"
 import values_db from "./databases/values_db.js"
 import WSS from "./modules/websocket.js";
 import DeviceRoute from "./routes/deviceRoute.js";
 import UserRoute from "./routes/userRoute.js";
-import MetricRoute from "./routes/metricRoute.js"
+import {MetricRoute} from "./routes/metricRoute.js"
 
 
 import { validate } from "jsonschema";

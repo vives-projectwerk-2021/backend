@@ -98,10 +98,12 @@ class values_db {
             })
     }
 
-    async readData(id) {
-      // for metrics
-      counter.inc();
+    async readData(id,info) {
+        // for metrics
+        counter.inc();
         await this.connector();
+
+        // Querying the data from the database
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
               let rows = []
@@ -119,10 +121,12 @@ class values_db {
             })
           }
         const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: -1h) 
+        |> range(start: ${info.start}) 
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")`;
+        |> filter(fn: (r) => r["host"] == "${id}")
+        |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`;
         let rows = getRows(fluxQuery);
         
         

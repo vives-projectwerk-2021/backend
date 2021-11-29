@@ -64,9 +64,12 @@ const DeviceRoute = {
     },
     put: (req, res, next) => {
         const id = req.params.id;
-        const data = req.body;
-        api.putDevice(id, data.devicename, data.location, data.firstname, data.lastname)
-            .then(result => res.status(201).json(result)) // TODO change status
+        const new_device = req.body;
+
+        // update device with id in mongo
+        api.putDevice(id, new_device)
+            .then(result => res.status(200).json(result))
+            .catch(err => console.log(err))
     }
 
 }

@@ -5,7 +5,7 @@ const paramsCecker = {
         "properties": {
             "id":{
                 "type": "string",
-                "pattern": "^[\d,a-f]{24}"
+                "pattern": "^[\d,a-f]{24}$"
                 }
         },
         "required": ["id"],

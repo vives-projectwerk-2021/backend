@@ -14,7 +14,7 @@ const DeviceRoute = {
     },
     get: (req, res, next) => {
         const id = req.params.id
-        if (!id.length === 24) {
+        if (!parseInt(id.length) === 24) {
             res.status(400).send({
                 message: 'Validation failed, id length is not exactly 24 characters or is not a number',
             })
@@ -55,12 +55,6 @@ const DeviceRoute = {
     },
     post: (req, res, next) => {
         const data = req.body
-        if (!data.length === 24) {
-            res.status(400).send({
-                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
-            })
-            return;
-        }
         const validation = validate(data, AddSensorChecker.create)
         console.log("The JSON validator gave an error: ", validation.errors)
         if (!validation.valid) {
@@ -81,6 +75,12 @@ const DeviceRoute = {
     },
     delete: (req, res, next) => {
         const data = req.params.id
+        if (!parseInt(data.length) === 24) {
+            res.status(400).send({
+                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
+            })
+            return;
+        }
         const validation = validate(parseInt(data), paramsCecker.delete)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)

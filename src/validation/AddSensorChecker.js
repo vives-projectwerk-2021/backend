@@ -5,7 +5,10 @@ const AddSensorChecker = {
         "properties": {
             "deviceid": { "type": "string" },
             "devicename": { "type": "string" },
-            "location": { "type": "string" },
+            "location": { 
+                "lat": {"type": "string"},
+                "long":{"type": "string"}
+            },
             "firstname": {"type": "string"},
             "lastname": {"type":"string"}
         },

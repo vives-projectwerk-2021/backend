@@ -13,15 +13,7 @@ const DeviceRoute = {
         api.showAllDevices().then(result => res.status(201).send(result));
     },
     get: (req, res, next) => {
-        const id = req.params.id
-        if (!id.length === 24) {
-            res.status(400).send({
-                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
-            })
-            return;
-        }
-        console.log("Passed lenght check")
-        const validation = validate(parseInt(id), paramsCecker.get)
+        const validation = validate(req.params, paramsCecker.create)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
             res.status(400).send({
@@ -30,7 +22,7 @@ const DeviceRoute = {
             });
             return;
         }
-        console.log("Passed validation check")
+        const id = req.params.id
         send()
         async function getInfo() {
             let info = await api.getDeviceByID(id)
@@ -57,12 +49,13 @@ const DeviceRoute = {
     post: (req, res, next) => {
         const data = req.body
         const validation = validate(data, AddSensorChecker.create)
-        console.log("The JSON validator gave an error: ", validation.errors)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',
                 details: validation.errors.map(e => e.stack)
+
             })
+            console.log("The JSON validator gave an error: ", validation.errors)
             return;
         }
         api.createDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
@@ -75,22 +68,16 @@ const DeviceRoute = {
             })
     },
     delete: (req, res, next) => {
-        const data = req.params.id
-        if (!data.length === 24) {
-            res.status(400).send({
-                message: 'Validation failed, id length is not exactly 24 characters or is not a number',
-            })
-            return;
-        }
-        const validation = validate(parseInt(data), paramsCecker.delete)
+        const validation = validate(req.params, paramsCecker.create)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
             res.status(400).send({
                 message: 'JSON validation failed',
                 details: validation.errors.map(e => e.stack)
-            })
+            });
             return;
         }
+        const data = req.params.id
         api.deleteDevice(data)
             .then(result => res.status(201).json(result)) // TODO change status
     },

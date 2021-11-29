@@ -113,10 +113,12 @@ class values_db {
             })
           }
         const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: ${info.start}, stop: ${info.stop}) 
+        |> range(start: ${info.start}) 
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")`;
+        |> filter(fn: (r) => r["host"] == "${id}")
+        |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`;
         let rows = getRows(fluxQuery);
 
         return rows

@@ -1,6 +1,9 @@
 import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
+import {counter} from "../routes/metricRoute.js";
+
+
 
 class values_db {
     // Constructor for the influx class
@@ -84,7 +87,10 @@ class values_db {
         writeApi
             .close()
             .then(() => {
+              
                 console.log('FINISHED')
+                //for metrics
+                counter.inc();
             })
             .catch(e => {
                 console.log('\\nFinished ERROR')
@@ -93,6 +99,8 @@ class values_db {
     }
 
     async readData(id) {
+      // for metrics
+      counter.inc();
         await this.connector();
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
@@ -116,7 +124,8 @@ class values_db {
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["host"] == "${id}")`;
         let rows = getRows(fluxQuery);
-
+        
+        
         return rows
     }
     

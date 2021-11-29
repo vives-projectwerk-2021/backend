@@ -82,7 +82,7 @@ app.get('/sensors', DeviceRoute.list);
 app.get('/sensors/:id', DeviceRoute.get);
 app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
-app.put('/sensors', DeviceRoute.put); // TODO change to REST
+app.put('/sensors/:id', DeviceRoute.put); // TODO change to REST
 
 // Metrics
 app.get('/metrics', MetricRoute.get);

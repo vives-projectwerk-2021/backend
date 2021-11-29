@@ -63,8 +63,9 @@ const DeviceRoute = {
             .then(result => res.status(201).json(result)) // TODO change status
     },
     put: (req, res, next) => {
+        const id = req.params.id;
         const data = req.body;
-        api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
+        api.putDevice(id, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result)) // TODO change status
     }
 

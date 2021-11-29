@@ -66,6 +66,16 @@ const DeviceRoute = {
         const id = req.params.id;
         const new_device = req.body;
 
+        // validate body
+        const validation = validate(new_device, AddSensorChecker.update)
+        if (!validation.valid) {
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            })
+            return;
+        }
+
         // update device with id in mongo
         api.putDevice(id, new_device)
             .then(result => res.status(200).json(result))

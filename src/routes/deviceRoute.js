@@ -17,7 +17,9 @@ const DeviceRoute = {
 
         if(query.start==null){
             query={
-                "start":"-1h"
+                "start":"-1h",
+                "stop":"",
+                "step":""
             }
         }
 

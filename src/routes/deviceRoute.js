@@ -15,17 +15,17 @@ const DeviceRoute = {
         const id = req.params.id
 
         send()
-        async function getInfo(){
-           let info = await api.getDeviceByID(id)
+        async function getInfo() {
+            let info = await api.getDeviceByID(id)
             return info
         }
 
         async function getValues() {
             let values = await api2.readData(id)
-                return values
+            return values
         }
 
-        async function send(){
+        async function send() {
             let info = await getInfo()
             let value = await getValues()
 
@@ -78,7 +78,14 @@ const DeviceRoute = {
 
         // update device with id in mongo
         api.putDevice(id, device)
-            .then(result => res.status(200).json(result))
+            .then(result => {
+                if (result.matchedCount < 1) {
+                    // no documents matched
+                    res.status(404).send({ message: "Sensor not found." })
+                } else {
+                    res.status(204).send()
+                }
+            })
             .catch(err => console.log(err))
     }
 

@@ -55,7 +55,7 @@ const DeviceRoute = {
     },
     post: (req, res, next) => {
         const data = req.body
-        if (!id.length === 24) {
+        if (!data.length === 24) {
             res.status(400).send({
                 message: 'Validation failed, id length is not exactly 24 characters or is not a number',
             })

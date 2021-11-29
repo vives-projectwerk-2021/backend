@@ -1,0 +1,22 @@
+name: cleaner
+
+on:
+  pull_request:
+      types: [closed]
+
+jobs:
+  merge_job:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      pr: ${{ steps.meta.outputs.version }}
+      image: ${{ steps.meta.outputs.tags }}
+    steps: 
+      - name: composite action
+        uses: vives-projectwerk-2021/pulu-action@clean
+        with: 
+          pulu_build: 'pulu-backend.pr-${{ github.event.number }}'
+          ssh_deploy_key: ${{secrets.SSH_DEPLOY_KEY}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          image: ${{ needs.build.outputs.image }}
+          pulu_endpoint: 'PULU_BACKEND'

@@ -23,13 +23,13 @@ const DeviceRoute = {
             return;
         }
         const id = req.params.id
-        let query= req.query
+        let query = req.query
 
-        if(query.start==null){
-            query={
-                "start":"-1h",
-                "stop":"",
-                "step":""
+        if (query.start == null) {
+            query = {
+                "start": "-1h",
+                "stop": "",
+                "step": ""
             }
         }
 
@@ -40,8 +40,8 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id,query)
-                return values
+            let values = await api2.readData(id, query)
+            return values
         }
 
         async function send() {
@@ -68,6 +68,8 @@ const DeviceRoute = {
             console.log("The JSON validator gave an error: ", validation.errors)
             return;
         }
+        api.createDevice(data.deviceid, data.devicename, data.location)
+
         console.log("validation for post device succes!")
         api.createDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result))

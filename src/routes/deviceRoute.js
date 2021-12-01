@@ -69,9 +69,6 @@ const DeviceRoute = {
             return;
         }
         api.createDevice(data.deviceid, data.devicename, data.location)
-
-        console.log("validation for post device succes!")
-        api.createDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result))
             .catch(() => {
                 res.status(500).send({

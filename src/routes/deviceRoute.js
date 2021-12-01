@@ -23,6 +23,16 @@ const DeviceRoute = {
             return;
         }
         const id = req.params.id
+        let query= req.query
+
+        if(query.start==null){
+            query={
+                "start":"-1h",
+                "stop":"",
+                "step":""
+            }
+        }
+
         send()
         async function getInfo() {
             let info = await api.getDeviceByID(id)
@@ -30,8 +40,8 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id)
-            return values
+            let values = await api2.readData(id,query)
+                return values
         }
 
         async function send() {

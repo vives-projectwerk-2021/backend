@@ -34,7 +34,7 @@ const DeviceRoute = {
 
         let order=mapper[query.start]
 
-        console.log(order)
+        
 
         send()
         async function getInfo(){

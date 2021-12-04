@@ -13,6 +13,10 @@ const DeviceRoute = {
         api.showAllDevices().then(result => res.status(201).send(result));
     },
     get: (req, res, next) => {
+        // Host ID
+        const id = req.params.id
+
+        // Validation
         const validation = validate(req.params, paramsCecker.create)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
@@ -22,19 +26,8 @@ const DeviceRoute = {
             });
             return;
         }
-        const id = req.params.id
-        let query = req.query
 
-
-
-        if(query.start==null){
-            query={
-                "start":"default"
-            }
-        }
-
-    
-    
+        // Mapper with default values
         let mapper={
             default:{start: '-1h', per: '15s'},
             hour:{start: '-1h', per: '15s'},
@@ -42,13 +35,14 @@ const DeviceRoute = {
             week:{start: '-7d', per: '30m'},
             month: {start:'-1mo', per: '2h'},
             year:{start: '-1y', per: '1d'},
-    
         }
 
-        let order=mapper[query.start]
-
-        
-
+        // Assinging the standard time
+        let defaultTime = mapper[req.query.start]
+        if(req.query.start==null){
+            defaultTime = mapper["default"]
+        }
+      
         send()
         async function getInfo() {
             let info = await api.getDeviceByID(id)
@@ -56,11 +50,9 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-
-            let values = await api2.readData(id,order)
-                
+            let values = await api2.readData(id,defaultTime)
+                console.log("Length array: "+values.length)
                 return values
-
         }
 
         async function send() {

@@ -1,16 +1,23 @@
 # The PULU Project backend
 
 ## Installing the backend
+Install dependencies:
 
-TODO
+```zsh
+npm install
+```
 
 ## Running the backend
 
-TODO
+Use the folling command to start the backend:
+```zsh
+npm run start
+```
 
 ## Postman Requests
 
 TODO
+
 
 ## Versions
 

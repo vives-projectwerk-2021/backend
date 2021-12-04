@@ -78,14 +78,14 @@ class users_db{
         return this.mongoDevices.find({}).toArray()
     }
 
-    async createDevice(deviceid,devicename,location,firstname,lastname){
+    async createDevice(deviceid,devicename,location){
         this.ConnectionChecker()
         const checker = await this.mongoDevices.findOne({deviceid:deviceid});
         
         if(checker){
             return Promise.resolve("Already exists")
         }else{
-            return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location,firstname:firstname,lastname:lastname})
+            return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location})
         }
     }
 

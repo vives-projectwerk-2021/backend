@@ -1,5 +1,6 @@
 import users_db from "../databases/users_db.js"
 import { AddSensorChecker } from "../validation/AddSensorChecker.js"
+import { paramsCecker } from "../validation/paramsCecker.js";
 import { validate } from "jsonschema";
 import values_db from "../databases/values_db.js";
 
@@ -15,8 +16,19 @@ const DeviceRoute = {
         // Host ID
         const id = req.params.id
 
+        // Validation
+        const validation = validate(req.params, paramsCecker.create)
+        if (!validation.valid) {
+            console.log("The JSON validator gave an error: ", validation.errors)
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            });
+            return;
+        }
+
         // Mapper with default values
-        let mapper = {
+        let mapper={
             default:{start: '-1h', per: '15s'},
             hour:{start: '-1h', per: '15s'},
             day: { start: '-1d', per: '5m' },
@@ -30,11 +42,10 @@ const DeviceRoute = {
         if(req.query.start==null){
             defaultTime = mapper["default"]
         }
-
-
+      
         send()
-        async function getInfo(){
-           let info = await api.getDeviceByID(id)
+        async function getInfo() {
+            let info = await api.getDeviceByID(id)
             return info
         }
 
@@ -44,7 +55,7 @@ const DeviceRoute = {
                 return values
         }
 
-        async function send(){
+        async function send() {
             let info = await getInfo()
             let value = await getValues()
 
@@ -58,16 +69,17 @@ const DeviceRoute = {
     },
     post: (req, res, next) => {
         const data = req.body
-        console.log(data)
         const validation = validate(data, AddSensorChecker.create)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',
                 details: validation.errors.map(e => e.stack)
+
             })
+            console.log("The JSON validator gave an error: ", validation.errors)
             return;
         }
-        api.createDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
+        api.createDevice(data.deviceid, data.devicename, data.location)
             .then(result => res.status(201).json(result))
             .catch(() => {
                 res.status(500).send({
@@ -77,12 +89,29 @@ const DeviceRoute = {
             })
     },
     delete: (req, res, next) => {
+        const validation = validate(req.params, paramsCecker.create)
+        if (!validation.valid) {
+            console.log("The JSON validator gave an error: ", validation.errors)
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            });
+            return;
+        }
         const data = req.params.id
         api.deleteDevice(data)
             .then(result => res.status(201).json(result)) // TODO change status
     },
     put: (req, res, next) => {
         const data = req.body;
+        const validation = validate(data, AddSensorChecker.create)
+        if (!validation.valid) {
+            res.status(400).send({
+                message: 'JSON validation failed',
+                details: validation.errors.map(e => e.stack)
+            })
+            return;
+        }
         api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
             .then(result => res.status(201).json(result)) // TODO change status
     }

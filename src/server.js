@@ -11,7 +11,6 @@ import {MetricRoute} from "./routes/metricRoute.js"
 
 
 import { validate } from "jsonschema";
-import { AddSensorChecker } from "./validation/AddSensorChecker.js"
 import { DataChecker } from "./validation/DataChecker.js";
 
 const app = express()

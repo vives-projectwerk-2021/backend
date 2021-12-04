@@ -25,13 +25,28 @@ const DeviceRoute = {
         const id = req.params.id
         let query = req.query
 
-        if (query.start == null) {
-            query = {
-                "start": "-1h",
-                "stop": "",
-                "step": ""
+
+
+        if(query.start==null){
+            query={
+                "start":"default"
             }
+
+    
+    
+        let mapper={
+            default:{start: '-1h', per: '15s'},
+            hour:{start: '-1h', per: '15s'},
+            day: { start: '-1d', per: '5m' },
+            week:{start: '-7d', per: '30m'},
+            month: {start:'-1mo', per: '2h'},
+            year:{start: '-1y', per: '1d'},
+    
         }
+
+        let order=mapper[query.start]
+
+        
 
         send()
         async function getInfo() {
@@ -40,20 +55,23 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id, query)
-            return values
+
+            let values = await api2.readData(id,order)
+                
+                return values
+
         }
 
         async function send() {
             let info = await getInfo()
             let value = await getValues()
 
-            let sendsenor = {
+            let sendsensor = {
                 info,
                 value
             }
             //console.log(sendsenor)        Too much logging
-            res.status(200).send(sendsenor)
+            res.status(200).send(sendsensor)
         }
     },
     post: (req, res, next) => {

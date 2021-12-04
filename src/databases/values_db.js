@@ -125,7 +125,7 @@ class values_db {
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["host"] == "${id}")
-        |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${info.per}, fn: mean, createEmpty: false)
         |> yield(name: "mean")`;
         let rows = getRows(fluxQuery);
         

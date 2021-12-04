@@ -141,7 +141,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"deviceid\":\"500\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":\"OOS>>TEEN\",\r\n    \"firstname\":\"Aaron\",\r\n    \"lastname\":\"Van Vyve\"\r\n}",
+					"raw": "{\r\n    \"deviceid\":\"8080\",\r\n    \"devicename\":\"POPO\",\r\n    \"location\":{\r\n        \"lat\":\"132.2353\",\r\n        \"long\": \"124445.23\"\r\n    }\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -239,7 +239,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"deviceid\":\"1212\",\r\n    \"devicename\":\"NEW\",\r\n    \"location\":\"Oostende\",\r\n    \"firstname\":\"Bart\",\r\n    \"lastname\":\"Maes\"\r\n}",
+					"raw": "{\r\n    \"devicename\":\"TEST\",\r\n    \"location\":\"TESENTENDEE\",\r\n    \"firstname\":\"TESTER\",\r\n    \"lastname\":\"TESTYVE\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -247,14 +247,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/sensors",
+					"raw": "http://localhost:3000/sensors/45",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"sensors"
+						"sensors",
+						"45"
 					]
 				}
 			},
@@ -266,7 +267,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/sensors/12",
+					"raw": "http://localhost:3000/sensors/37003a000d5047394b373320",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -274,7 +275,33 @@
 					"port": "3000",
 					"path": [
 						"sensors",
-						"12"
+						"37003a000d5047394b373320"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getwithquery",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/sensors/37003a000d5047394b373320?start=hour",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sensors",
+						"37003a000d5047394b373320"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "hour"
+						}
 					]
 				}
 			},

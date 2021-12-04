@@ -25,9 +25,7 @@ const AddSensorChecker = {
             },
             "required": ["lat", "long"],
             "additionalProperties": false
-        },
-        "firstname": { "type": "string" },
-        "lastname": { "type": "string" }
+        }
     },
     "required": ["devicename"],
     "additionalProperties": false

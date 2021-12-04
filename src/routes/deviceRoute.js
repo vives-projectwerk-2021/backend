@@ -12,17 +12,11 @@ const DeviceRoute = {
         api.showAllDevices().then(result => res.status(201).send(result));
     },
     get: (req, res, next) => {
+        // Host ID
         const id = req.params.id
-        let query= req.query
 
-        if(query.start==null){
-            query={
-                "start":"default"
-            }
-        }
-    
-    
-        let mapper={
+        // Mapper with default values
+        let mapper = {
             default:{start: '-1h', per: '15s'},
             hour:{start: '-1h', per: '15s'},
             day: { start: '-1d', per: '5m' },
@@ -32,9 +26,12 @@ const DeviceRoute = {
     
         }
 
-        let order=mapper[query.start]
+        // Assinging the standard time
+        let defaultTime = mapper[req.query.start]
+        if(req.query.start==null){
+            defaultTime = mapper["default"]
+        }
 
-        
 
         send()
         async function getInfo(){
@@ -43,7 +40,7 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id,order)
+            let values = await api2.readData(id,defaultTime)
                 console.log("Length array: "+values.length)
                 return values
         }

@@ -23,7 +23,6 @@ const DeviceRoute = {
             week:{start: '-7d', per: '30m'},
             month: {start:'-1mo', per: '2h'},
             year:{start: '-1y', per: '1d'},
-    
         }
 
         // Assinging the standard time

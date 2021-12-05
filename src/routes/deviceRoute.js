@@ -98,9 +98,16 @@ const DeviceRoute = {
             });
             return;
         }
-        const data = req.params.id
-        api.deleteDevice(data)
-            .then(result => res.status(201).json(result)) // TODO change status
+        const id = req.params.id
+        api.deleteDevice(id)
+            .then((result) => {
+                if (result.deletedCount < 1) {
+                    // nothing deleted so sensor not found
+                    res.status(404).send({ message: "Sensor not found." });
+                } else {
+                    res.status(204).json();
+                }
+            })
     },
     put: (req, res, next) => {
         const data = req.body;

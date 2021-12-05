@@ -57,13 +57,13 @@ const DeviceRoute = {
 
         async function send() {
             let info = await getInfo()
-            //let value = await getValues()
+            let value = await getValues()
 
             let sendsensor = {
                 "id":info.deviceid,
                 "name":info.devicename,
                 "location":info.location,
-                //value
+                value
             }
             //console.log(sendsenor)        Too much logging
             res.status(200).send(sendsensor)

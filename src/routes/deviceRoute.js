@@ -12,7 +12,6 @@ const DeviceRoute = {
     list: (req, res, next) => {
         api.showAllDevices().then(result => res.status(201).send(result));
     },
-
     get: (req, res, next) => {
         // Host ID
         const id = req.params.id
@@ -27,6 +26,7 @@ const DeviceRoute = {
             });
             return;
         }
+
         // Mapper with default values
         let mapper={
             default:{start: '-1h', per: '15s'},
@@ -59,14 +59,26 @@ const DeviceRoute = {
             let info = await getInfo()
             let value = await getValues()
 
-            let sendsensor = {
-                "id":info.deviceid,
-                "name":info.devicename,
-                "location":info.location,
-                value
+            let sendsensor={}
+            if(info==null){
+                sendsensor = {
+                    info,
+                    value
+                }
+                
+            }else{
+                sendsensor = {
+                    "id":info.deviceid,
+                    "name":info.devicename,
+                    "location":info.location,
+                    value
+                }
+                
             }
+
             //console.log(sendsenor)        Too much  logging
             res.status(200).send(sendsensor)
+            
         }
     },
     post: (req, res, next) => {
@@ -100,16 +112,9 @@ const DeviceRoute = {
             });
             return;
         }
-        const id = req.params.id
-        api.deleteDevice(id)
-            .then((result) => {
-                if (result.deletedCount < 1) {
-                    // nothing deleted so sensor not found
-                    res.status(404).send({ message: "Sensor not found." });
-                } else {
-                    res.status(204).json();
-                }
-            })
+        const data = req.params.id
+        api.deleteDevice(data)
+            .then(result => res.status(201).json(result)) // TODO change status
     },
     put: (req, res, next) => {
         const data = req.body;

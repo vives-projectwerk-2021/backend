@@ -1,7 +1,7 @@
 import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
-import {counter} from "../routes/metricRoute.js";
+import {mongo_write, mongo_read} from "../routes/metricRoute.js";
 
 
 
@@ -90,7 +90,7 @@ class values_db {
               
                 console.log('FINISHED')
                 //for metrics
-                counter.inc();
+                mongo_write.inc();
             })
             .catch(e => {
                 console.log('\\nFinished ERROR')
@@ -100,7 +100,7 @@ class values_db {
 
     async readData(id,info) {
         // for metrics
-        counter.inc();
+        mongo_read.inc();
         await this.connector();
 
         // Querying the data from the database

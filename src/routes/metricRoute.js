@@ -17,9 +17,14 @@ const MetricRoute = {
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 5000 });
 
-const counter = new client.Counter({
-  name: 'node_request_operations_total',
-  help: 'The total number of processed requests'
+const mongo_write = new client.Counter({
+  name: 'database_writes',
+  help: 'The total number database writes'
+});
+
+const mongo_read = new client.Counter({
+  name: 'mongo_reads',
+  help: 'The total number database reads'
 });
 
 const custom_metric = new client.Gauge({
@@ -46,5 +51,5 @@ const user_count = new client.Gauge({
   },
 });
 
-export  {MetricRoute, counter}
+export  {MetricRoute, mongo_write, mongo_read}
 

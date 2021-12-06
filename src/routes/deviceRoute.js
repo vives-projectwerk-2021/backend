@@ -94,8 +94,7 @@ const DeviceRoute = {
                 }
                 // deviceID is unique so create new device
                 api.createDevice(new_device.deviceid, new_device.devicename, new_device.location)
-                    .then(result =>{
-                        new_device['_id'] = result.insertedId;
+                    .then(() =>{
                         res.status(201).json(new_device);
                     })
                     .catch((err) => console.log(err))

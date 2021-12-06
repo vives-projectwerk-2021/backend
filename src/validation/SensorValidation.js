@@ -11,12 +11,14 @@ const SensorValidation = {
                 "type": "object",
                 "properties": {
                     "lat": {
-                        "type": "string",
-                        "pattern": "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,7})?))$"
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90
                     },
                     "long": {
-                        "type": "string",
-                        "pattern": "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,7})?))$"
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
                     }
                 },
                 "required": ["lat", "long"],

@@ -99,39 +99,56 @@ class values_db {
             })
     }
 
-    async readData(id,info) {
-        // for metrics
+    async readData(id,defaultTime) {
+        // For metrics
         influx_read.inc();
         await this.connector();
 
-        // Querying the data from the database
-        const getRows = (query) => {
-            return new Promise((resolve, reject) => {
-              let rows = []
-              this.queryApi.queryRows(query, {
-                next(row, tableMeta) {
-                  rows.push(tableMeta.toObject(row))
-                },
-                error(err) {
-                  reject(err)
-                },
-                complete() {
-                  resolve(rows)
-                }
-              })
-            })
-          }
-        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: ${info.start})
+        // Executing the query in the rows function
+        return this.getValuesByTime(id, defaultTime)
+    }
+
+    async getValuesByTime(id, defaultTime) {
+      // Setting up the flux query
+      const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
+        |> range(start: ${defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["host"] == "${id}")
-        |> aggregateWindow(every: ${info.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> group(columns: ["_time"])
         |> yield(name: "mean")`;
-        let rows = getRows(fluxQuery);
-        
-        return rows
+
+        // Executing the flux query
+        const getRows = (query) => {
+          return new Promise((resolve, reject) => {
+            let rows = []
+            this.queryApi.queryRows(query, {
+              next(row, tableMeta) {
+                rows.push(tableMeta.toObject(row))
+              },
+              error(err) {
+                reject(err)
+              },
+              complete() {
+                resolve(rows)
+              }
+            })
+          })
+        }
+
+      // Setting up the rows function and injecting the params
+      const result = (await getRows(fluxQuery))
+
+      /* let formattedResult = result.map(function(dataPoint){
+        return {
+          "timestamp": dataPoint._time
+        }
+      }) */
+      
+      return result
     }
+
     
 }
 

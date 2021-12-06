@@ -51,7 +51,7 @@ const DeviceRoute = {
 
         async function getValues() {
             let values = await api2.readData(id,defaultTime)
-                console.log("Length array: "+ values.length)
+                //console.log("Length array: "+ values.length)
                 return values
         }
 

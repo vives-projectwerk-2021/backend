@@ -1,6 +1,9 @@
 import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
+import {influx_write, influx_read} from "../routes/metricRoute.js";
+
+
 
 class values_db {
     // Constructor for the influx class
@@ -84,7 +87,10 @@ class values_db {
         writeApi
             .close()
             .then(() => {
+              
                 console.log('FINISHED')
+                //for metrics
+                influx_write.inc();
             })
             .catch(e => {
                 console.log('\\nFinished ERROR')
@@ -92,8 +98,12 @@ class values_db {
             })
     }
 
-    async readData(id) {
+    async readData(id,info) {
+        // for metrics
+        influx_read.inc();
         await this.connector();
+
+        // Querying the data from the database
         const getRows = (query) => {
             return new Promise((resolve, reject) => {
               let rows = []
@@ -111,12 +121,15 @@ class values_db {
             })
           }
         const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: -1h) 
+        |> range(start: ${info.start}) 
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")`;
+        |> filter(fn: (r) => r["host"] == "${id}")
+        |> aggregateWindow(every: ${info.per}, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`;
         let rows = getRows(fluxQuery);
-
+        
+        
         return rows
     }
     

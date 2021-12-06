@@ -1,5 +1,6 @@
 import config from "../config/config.js"
 import { MongoClient } from "mongodb";
+import {mongo_write, mongo_read} from "../routes/metricRoute.js";
 
 //import CryptoJS from "crypto-js";
 
@@ -37,16 +38,19 @@ class users_db{
     //ACCOUNTS
     async findAllUsers(){
         this.ConnectionChecker()
+        mongo_read.inc();
         return this.mongoUsers.find({}).toArray()
     }
 
     async findUserByName(username,password){
         this.ConnectionChecker()
+        mongo_read.inc();
         return  this.mongoUsers.findOne({$and:[{username:username},{password:password}]});
     }
 
     async createUser(username,password){
         this.ConnectionChecker()
+        mongo_write.inc();
         const lol = await this.mongoUsers.findOne({username:username});
         
         if(lol){
@@ -58,11 +62,13 @@ class users_db{
 
     async changePassword(username,password,newPassword){
         this.ConnectionChecker()
+        mongo_write.inc();
         return this.mongoUsers.updateOne({$and:[{username:username},{password:password}]},{$set: {password:newPassword}})
     }
 
     async deleteUser(username,password){
         this.ConnectionChecker()
+        mongo_write.inc();
         return this.mongoUsers.deleteOne({$and:[{username:username},{password:password}]})
     }
 
@@ -70,27 +76,31 @@ class users_db{
     //DEVICES
     async getDeviceByID(deviceid){
         this.ConnectionChecker()
+        mongo_read.inc();
         return this.mongoDevices.findOne({deviceid:deviceid})
     }
 
     async showAllDevices(){
         this.ConnectionChecker()
+        mongo_read.inc();
         return this.mongoDevices.find({}).toArray()
     }
 
-    async createDevice(deviceid,devicename,location,firstname,lastname){
+    async createDevice(deviceid,devicename,location){
         this.ConnectionChecker()
+        mongo_write.inc();
         const checker = await this.mongoDevices.findOne({deviceid:deviceid});
         
         if(checker){
             return Promise.resolve("Already exists")
         }else{
-            return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location,firstname:firstname,lastname:lastname})
+            return this.mongoDevices.insertOne({deviceid:deviceid,devicename:devicename,location:location})
         }
     }
 
     async deleteDevice(deviceid){
         this.ConnectionChecker()
+        mongo_write.inc();
         return this.mongoDevices.deleteOne({deviceid:deviceid})
     }
 
@@ -109,7 +119,6 @@ class users_db{
     }
 
     async ConnectionChecker(){
-
         await this.client.db().admin().listDatabases()
         .then(()=>{
             this.isConnected=true

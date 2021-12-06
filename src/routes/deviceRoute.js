@@ -1,5 +1,5 @@
 import users_db from "../databases/users_db.js"
-import { AddSensorChecker } from "../validation/AddSensorChecker.js"
+import { SensorValidation } from "../validation/SensorValidation.js"
 import { paramsCecker } from "../validation/paramsCecker.js";
 import { validate } from "jsonschema";
 import values_db from "../databases/values_db.js";
@@ -72,7 +72,7 @@ const DeviceRoute = {
     post: (req, res, next) => {
 
         // validation of request body
-        const validation = validate(req.body, AddSensorChecker.create)
+        const validation = validate(req.body, SensorValidation.create)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',
@@ -118,7 +118,7 @@ const DeviceRoute = {
     },
     put: (req, res, next) => {
         const data = req.body;
-        const validation = validate(data, AddSensorChecker.create)
+        const validation = validate(data, SensorValidation.create)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',

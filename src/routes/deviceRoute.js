@@ -60,10 +60,12 @@ const DeviceRoute = {
             let value = await getValues()
 
             let sendsensor = {
-                info,
+                "id":info.deviceid,
+                "name":info.devicename,
+                "location":info.location,
                 value
             }
-            //console.log(sendsenor)        Too much logging
+            //console.log(sendsenor)        Too much  logging
             res.status(200).send(sendsensor)
         }
     },

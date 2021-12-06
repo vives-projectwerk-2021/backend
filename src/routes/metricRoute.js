@@ -18,21 +18,23 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 5000 });
 
 const mongo_write = new client.Counter({
-  name: 'database_writes',
+  name: 'mongo_writes',
   help: 'The total number database writes'
 });
 
 const mongo_read = new client.Counter({
   name: 'mongo_reads',
-  help: 'The total number database reads'
+  help: 'The total number database writes'
 });
 
-const custom_metric = new client.Gauge({
-  name: 'custom_value',
-  help: 'this is some random value',
-  collect() {
-    this.set(5);
-  },
+const influx_write = new client.Counter({
+  name: 'influx_writes',
+  help: 'The total number database writes'
+});
+
+const influx_read = new client.Counter({
+  name: 'influx_reads',
+  help: 'The total number database reads'
 });
 
 const device_count = new client.Gauge({
@@ -51,5 +53,5 @@ const user_count = new client.Gauge({
   },
 });
 
-export  {MetricRoute, mongo_write, mongo_read}
+export  {MetricRoute, mongo_write, mongo_read, influx_write, influx_read}
 

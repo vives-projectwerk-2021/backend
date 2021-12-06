@@ -17,6 +17,7 @@ class values_db {
         console.log("Connecting to the influxDB: " + this.org);
         this.client = new InfluxDB({url: `${config.values_db.baseURL}`, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
+        console.log("Connection to the InfluxDB was succesful!")
     }
 
     async writeData(data) {

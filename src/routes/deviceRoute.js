@@ -28,7 +28,7 @@ const DeviceRoute = {
         }
 
         // Mapper with default values
-        let mapper={
+        let mapper = {
             default:{start: '-1h', per: '15s'},
             hour:{start: '-1h', per: '15s'},
             day: { start: '-1d', per: '5m' },
@@ -51,7 +51,7 @@ const DeviceRoute = {
 
         async function getValues() {
             let values = await api2.readData(id,defaultTime)
-                console.log("Length array: "+values.length)
+                console.log("Length array: "+ values.length)
                 return values
         }
 

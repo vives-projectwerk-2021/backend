@@ -10,7 +10,9 @@ let api2 = new values_db();
 
 const DeviceRoute = {
     list: (req, res, next) => {
-        api.showAllDevices().then(result => res.status(201).send(result));
+        api.showAllDevices()
+            .then(result => res.status(200).send(result))
+            .catch((err) => console.log(err));
     },
     get: (req, res, next) => {
         // Host ID
@@ -28,21 +30,21 @@ const DeviceRoute = {
         }
 
         // Mapper with default values
-        let mapper={
-            default:{start: '-1h', per: '15s'},
-            hour:{start: '-1h', per: '15s'},
+        let mapper = {
+            default: { start: '-1h', per: '15s' },
+            hour: { start: '-1h', per: '15s' },
             day: { start: '-1d', per: '5m' },
-            week:{start: '-7d', per: '30m'},
-            month: {start:'-1mo', per: '2h'},
-            year:{start: '-1y', per: '1d'},
+            week: { start: '-7d', per: '30m' },
+            month: { start: '-1mo', per: '2h' },
+            year: { start: '-1y', per: '1d' },
         }
 
         // Assinging the standard time
         let defaultTime = mapper[req.query.start]
-        if(req.query.start==null){
+        if (req.query.start == null) {
             defaultTime = mapper["default"]
         }
-      
+
         send()
         async function getInfo() {
             let info = await api.getDeviceByID(id)
@@ -50,9 +52,9 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id,defaultTime)
-                console.log("Length array: "+values.length)
-                return values
+            let values = await api2.readData(id, defaultTime)
+            console.log("Length array: " + values.length)
+            return values
         }
 
         async function send() {
@@ -68,8 +70,9 @@ const DeviceRoute = {
         }
     },
     post: (req, res, next) => {
-        const data = req.body
-        const validation = validate(data, AddSensorChecker.create)
+
+        // validation of request body
+        const validation = validate(req.body, AddSensorChecker.create)
         if (!validation.valid) {
             res.status(400).send({
                 message: 'JSON validation failed',
@@ -79,14 +82,25 @@ const DeviceRoute = {
             console.log("The JSON validator gave an error: ", validation.errors)
             return;
         }
-        api.createDevice(data.deviceid, data.devicename, data.location)
-            .then(result => res.status(201).json(result))
-            .catch(() => {
-                res.status(500).send({
-                    message: "Failed to write to JSON db",
-                    code: 105
-                })
+
+        const new_device = req.body;
+        // Check if deviceID already exists
+        api.getDeviceByID(new_device.deviceid)
+            .then((device) => {
+                if (device) {
+                    // Duplicate deviceID
+                    res.status(400).send({ message: "deviceID already in use" })
+                    return;
+                }
+                // deviceID is unique so create new device
+                api.createDevice(new_device.deviceid, new_device.devicename, new_device.location)
+                    .then(result =>{
+                        new_device['_id'] = result.insertedId;
+                        res.status(201).json(new_device);
+                    })
+                    .catch((err) => console.log(err))
             })
+            .catch((err) => console.log(err))
     },
     delete: (req, res, next) => {
         const validation = validate(req.params, paramsCecker.create)

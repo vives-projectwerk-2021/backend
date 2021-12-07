@@ -27,7 +27,7 @@ const wss = new WSS(server, recentLiveData)
 app.get('/', (req, res) => {
 
   res.send(`<h1>Connected to Pulu Backend</h1>
-            <p> Go to /live-data to see most recent device data</p>`)
+            <p> Go to /livedata to see most recent device data</p>`)
 })
 
 // Influx

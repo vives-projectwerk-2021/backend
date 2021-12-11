@@ -115,15 +115,28 @@ const DeviceRoute = {
             })
     },
     put: (req, res, next) => {
-        const data = req.body;
-        const validation = validate(data, AddSensorChecker.create)
+        const id = req.params.id;
+        const device = req.body;
+
+        // validate body
+        const validation = validate(device, AddSensorChecker.update)
         if (!validation.valid) {
             const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
             next(err);
             return;
         }
-        api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
-            .then(result => res.status(201).json(result)) // TODO change status
+
+        // update device with id in mongo
+        api.putDevice(id, device)
+            .then(result => {
+                if (result.matchedCount < 1) {
+                    // no documents matched
+                    res.status(404).send({ message: "Sensor not found." })
+                } else {
+                    res.status(204).send()
+                }
+            })
+            .catch(err => console.log(err))
     }
 
 }

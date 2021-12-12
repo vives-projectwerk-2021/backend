@@ -104,10 +104,13 @@ class users_db{
         return this.mongoDevices.deleteOne({deviceid:deviceid})
     }
 
-    async putDevice(deviceid,devicename,location,firstname,lastname){
+    async putDevice(id, body) {
         this.ConnectionChecker()
-        mongo_write.inc();
-        return this.mongoDevices.updateOne({deviceid:deviceid},{$set: {devicename:devicename,location:location,firstname:firstname,lastname:lastname}})
+        const device = {
+            devicename: body.devicename,
+            location: body.location
+        }
+        return this.mongoDevices.updateOne({ deviceid: id }, { $set: device })
     }
 
     async closeConnection(){

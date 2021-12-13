@@ -18,7 +18,8 @@ const config = {
         token: process.env.MONGO_API_CONNECTION_TOKEN,
         db: process.env.MONGO_DATABASE,
         ucoll: process.env.MONGO_USERSCOLLECTION,
-        dcoll: process.env.MONGO_DEVICESCOLLECTION
+        dcoll: process.env.MONGO_DEVICESCOLLECTION,
+        mcoll: process.env.MONGO_MEMBERS
     }
 
 };

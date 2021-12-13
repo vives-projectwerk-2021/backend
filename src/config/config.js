@@ -19,7 +19,9 @@ const config = {
         db: process.env.MONGO_DATABASE,
         ucoll: process.env.MONGO_USERSCOLLECTION,
         dcoll: process.env.MONGO_DEVICESCOLLECTION
-    }
+    },
+    
+    ttn_device_manager_base_url: process.env.TTN_DEVICE_MANAGER_BASE_URL
 
 };
 

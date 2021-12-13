@@ -132,14 +132,41 @@ class values_db {
 
       // Setting up the rows function and injecting the params
       const result = (await getRows(fluxQuery))
+      console.log(result[1])
+      let formattedResult = [];
 
-      /* let formattedResult = result.map(function(dataPoint){
-        return {
-          "timestamp": dataPoint._time
+      for (let i = 0; i < result.length; i++) {
+        const dataReformat = {
+          "time": `${result[i]._time}`,
+          "moisture": [
+              {
+                "value": `${result[i]._value_mLevel1}`,
+                "height": "level 1"
+              },
+              {
+                "value": `${result[i]._value_mLevel2}`,
+                "height": "level 2"
+              },
+              {
+                "value": `${result[i]._value_mLevel3}`,
+                "height": "level 3"
+              },
+              {
+                "value": `${result[i]._value_mLevel4}`,
+                "height": "level 4"
+              }
+            ],
+          "temperature": {
+              "air": `${result[i]._value_tAir}`,
+              "ground": `${result[i]._value_tGround}`
+            },
+          "light": `${result[i]._value_light}`,
+          "battery_voltage": `${result[i]._value_battVoltage}`
         }
-      }) */
-      
-      return result
+        formattedResult.push(dataReformat);
+      }
+      console.log(formattedResult)
+      return formattedResult;
     }
 
     

@@ -11,14 +11,10 @@ const SensorValidation = {
                 "type": "object",
                 "properties": {
                     "lat": {
-                        "type": "number",
-                        "minimum": -90,
-                        "maximum": 90
+                        "type": "string"
                     },
                     "long": {
-                        "type": "number",
-                        "minimum": -180,
-                        "maximum": 180
+                        "type": "string"
                     },
                     "place_name": { "type": "string" }
                 },

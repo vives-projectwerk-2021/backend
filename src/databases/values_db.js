@@ -132,7 +132,8 @@ class values_db {
 
       // Setting up the rows function and injecting the params
       const result = (await getRows(fluxQuery))
-      console.log(result[1])
+
+      // Reformatting the data from influx into a differen JSON object for more easy access in frontend
       let formattedResult = [];
 
       for (let i = 0; i < result.length; i++) {
@@ -165,7 +166,6 @@ class values_db {
         }
         formattedResult.push(dataReformat);
       }
-      console.log(formattedResult)
       return formattedResult;
     }
 

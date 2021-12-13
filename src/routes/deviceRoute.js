@@ -11,14 +11,28 @@ let api2 = new values_db();
 
 const DeviceRoute = {
     list: (req, res, next) => {
-        api.showAllDevices()
-            .then(result => {
-                res.send(result.map(d => d.deviceid))
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(404).send(err)
-            });
+        send()
+
+        // Functions
+        async function send() {
+            let IDs = await getIDs()
+            let lastValues = await getLastValues(IDs)
+
+            async function getIDs() {
+                return (await api.showAllDevices()).map(d => d.deviceid)
+            }
+
+            async function getLastValues(IDs) {
+                return api2.getLastSent(IDs);
+            }
+
+            const result = {
+                "ID's": IDs,
+                "values": lastValues
+            }
+
+            res.send(result)
+        }        
     },
     get: (req, res, next) => {
         // Host ID
@@ -50,17 +64,8 @@ const DeviceRoute = {
         }
 
         send()
-        async function getInfo() {
-            let info = await api.getDeviceByID(id)
-            return info
-        }
 
-        async function getValues() {
-            let values = await api2.readData(id,defaultTime)
-                //console.log("Length array: "+ values.length)
-                return values
-        }
-
+        // Functions
         async function send() {
             let info = await getInfo()
             let values = await getValues()
@@ -72,7 +77,7 @@ const DeviceRoute = {
                     values
                 }
                 
-            }else{
+            } else {
                 sendsensor = {
                     "id":info.deviceid,
                     "name":info.devicename,
@@ -82,7 +87,17 @@ const DeviceRoute = {
                 
             }
 
-            //console.log(sendsenor)        Too much  logging
+            async function getInfo() {
+                let info = await api.getDeviceByID(id)
+                return info
+            }
+    
+            async function getValues() {
+                let values = await api2.readData(id,defaultTime)
+                    //console.log("Length array: "+ values.length)
+                    return values
+            }
+
             res.status(200).send(sendsensor)
             
         }

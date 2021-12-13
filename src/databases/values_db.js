@@ -11,9 +11,10 @@ class values_db {
         this.token = `${config.values_db.token}`;
         this.org = `${config.values_db.organization}`;
         this.bucket = `${config.values_db.bucket}`;
+        this.connector();        
     }
 
-    async connector() {
+    connector() {
         console.log("Connecting to the influxDB: " + this.org);
         this.client = new InfluxDB({url: `${config.values_db.baseURL}`, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
@@ -21,7 +22,6 @@ class values_db {
     }
 
     async writeData(data) {
-        await this.connector();
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: data.data.device_id })
 
@@ -102,13 +102,46 @@ class values_db {
     async readData(id,defaultTime) {
         // For metrics
         influx_read.inc();
-        await this.connector();
 
         // Executing the query in the rows function
         return this.getValuesByTime(id, defaultTime)
     }
 
-    async getLastSent(id) {
+    async getFluxResult(fluxQuery) {
+      // Executing the flux query
+      const getRows = (query) => {
+        return new Promise((resolve, reject) => {
+          let rows = []
+          this.queryApi.queryRows(query, {
+            next(row, tableMeta) {
+              rows.push(tableMeta.toObject(row))
+            },
+            error(err) {
+              reject(err)
+            },
+            complete() {
+              resolve(rows)
+            }
+          })
+        })
+      }
+      return (await getRows(fluxQuery))
+    }
+
+    async getLastSent(IDs) {
+      // Query for getting the last data every day last 7 days
+      const fluxQuery = `from(bucket: "${config.values_db.bucket}")
+      |> range(start: -7d)
+      |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
+      |> filter(fn: (r) => r["_measurement"] == "sensors")
+      |> filter(fn: (r) => r["_field"] == "value")
+      |> aggregateWindow(every: 1d, fn: last, createEmpty: false)
+      |> yield(name: "last")
+      |> drop(columns: ["_start", "_stop"])`
+
+      const result = await this.getFluxResult(fluxQuery)
+
+      return result;
 
     }
 
@@ -116,26 +149,8 @@ class values_db {
       // Setting up the flux query
       const fluxQuery = buildQuery(id, defaultTime);
 
-        // Executing the flux query
-        const getRows = (query) => {
-          return new Promise((resolve, reject) => {
-            let rows = []
-            this.queryApi.queryRows(query, {
-              next(row, tableMeta) {
-                rows.push(tableMeta.toObject(row))
-              },
-              error(err) {
-                reject(err)
-              },
-              complete() {
-                resolve(rows)
-              }
-            })
-          })
-        }
-
-      // Setting up the rows function and injecting the params
-      const result = (await getRows(fluxQuery))
+      // Executing the Flux request using the Rows functions
+      const result = await this.getFluxResult(fluxQuery)
 
       // Reformatting the data from influx into a different JSON object for more easy access in frontend
       let formattedResult = result.map(d => d = {

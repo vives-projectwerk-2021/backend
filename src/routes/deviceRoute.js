@@ -1,5 +1,5 @@
 import users_db from "../databases/users_db.js"
-import { AddSensorChecker } from "../validation/AddSensorChecker.js"
+import { SensorValidation } from "../validation/SensorValidation.js"
 import { paramsCecker } from "../validation/paramsCecker.js";
 import { validate } from "jsonschema";
 import values_db from "../databases/values_db.js";
@@ -11,7 +11,9 @@ let api2 = new values_db();
 
 const DeviceRoute = {
     list: (req, res, next) => {
-        api.showAllDevices().then(result => res.status(201).send(result));
+        api.showAllDevices()
+            .then(result => res.status(200).send(result))
+            .catch((err) => console.log(err));
         console.log(api.showAllDevices())
     },
     get: (req, res, next) => {
@@ -29,20 +31,20 @@ const DeviceRoute = {
 
         // Mapper with default values
         let mapper = {
-            default:{start: '-1h', per: '15s'},
-            hour:{start: '-1h', per: '15s'},
+            default: { start: '-1h', per: '15s' },
+            hour: { start: '-1h', per: '15s' },
             day: { start: '-1d', per: '5m' },
-            week:{start: '-7d', per: '30m'},
-            month: {start:'-1mo', per: '2h'},
-            year:{start: '-1y', per: '1d'},
+            week: { start: '-7d', per: '30m' },
+            month: { start: '-1mo', per: '2h' },
+            year: { start: '-1y', per: '1d' },
         }
 
         // Assinging the standard time
         let defaultTime = mapper[req.query.start]
-        if(req.query.start==null){
+        if (req.query.start == null) {
             defaultTime = mapper["default"]
         }
-      
+
         send()
         async function getInfo() {
             let info = await api.getDeviceByID(id)
@@ -82,19 +84,33 @@ const DeviceRoute = {
         }
     },
     post: (req, res, next) => {
-        const data = req.body
-        const validation = validate(data, AddSensorChecker.create)
+
+        // validation of request body
+        const validation = validate(req.body, SensorValidation.create)
         if (!validation.valid) {
             const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
             next(err);
             return;
         }
-        api.createDevice(data.deviceid, data.devicename, data.location)
-            .then(result => res.status(201).json(result))
-            .catch(() => {
-                const err = new ErrorResponse(500, 'Failed to write to db');
-			    next(err);
+
+        const new_device = req.body;
+        // Check if deviceID already exists
+        api.getDeviceByID(new_device.deviceid)
+            .then((device) => {
+                if (device) {
+                    // Duplicate deviceID
+                    const err = new ErrorResponse(400, "deviceID already in use");
+                    next(err);
+                    return;
+                }
+                // deviceID is unique so create new device
+                api.createDevice(new_device.deviceid, new_device.devicename, new_device.location)
+                    .then(() =>{
+                        res.status(201).json(new_device);
+                    })
+                    .catch((err) => console.log(err))
             })
+            .catch((err) => console.log(err))
     },
     delete: (req, res, next) => {
         const validation = validate(req.params, paramsCecker.create)
@@ -120,7 +136,7 @@ const DeviceRoute = {
         const device = req.body;
 
         // validate body
-        const validation = validate(device, AddSensorChecker.update)
+        const validation = validate(device, SensorValidation.update)
         if (!validation.valid) {
             const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
             next(err);
@@ -132,7 +148,8 @@ const DeviceRoute = {
             .then(result => {
                 if (result.matchedCount < 1) {
                     // no documents matched
-                    res.status(404).send({ message: "Sensor not found." })
+                    const err = new ErrorResponse(404, "Sensor not found.");
+                    next(err);
                 } else {
                     res.status(204).send()
                 }

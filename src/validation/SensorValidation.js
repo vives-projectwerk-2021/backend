@@ -1,15 +1,30 @@
-const AddSensorChecker = {
-
+const SensorValidation = {
     create: {
         "type": "object",
         "properties": {
-            "deviceid": { "type": "string" },
+            "deviceid": {
+                "type": "string",
+                "pattern": "^[\\d,a-f]{24}$"
+            },
             "devicename": { "type": "string" },
-            "location": { "type": "string" }
+            "location": {
+                "type": "object",
+                "properties": {
+                    "lat": {
+                        "type": "string"
+                    },
+                    "long": {
+                        "type": "string"
+                    },
+                    "place_name": { "type": "string" }
+                },
+                "required": ["lat", "long", "place_name"],
+                "additionalProperties": false
+            },
+
         },
         "required": ["deviceid", "devicename", "location"],
         "additionalProperties": false
-        //first and last name are at the moment given with the addsensor but should not be necessery later when you have to loging to add sensors
     },
     update: {
         "type": "object",
@@ -27,9 +42,10 @@ const AddSensorChecker = {
                         "type": "number",
                         "minimum": -180,
                         "maximum": 180
-                    }
+                    },
+                    "place_name": { "type": "string" }
                 },
-                "required": ["lat", "long"],
+                "required": ["lat", "long", "place_name"],
                 "additionalProperties": false
             },
 
@@ -39,4 +55,4 @@ const AddSensorChecker = {
     }
 }
 
-export { AddSensorChecker }
+export { SensorValidation }

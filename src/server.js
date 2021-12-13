@@ -100,6 +100,9 @@ app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
 app.put('/sensors/:id', DeviceRoute.put); // TODO change to REST
 
+// Members
+app.get('/members',DeviceRoute.members);
+
 // Metrics
 app.get('/metrics', MetricRoute.get);
 

@@ -3,6 +3,7 @@ import { AddSensorChecker } from "../validation/AddSensorChecker.js"
 import { paramsCecker } from "../validation/paramsCecker.js";
 import { validate } from "jsonschema";
 import values_db from "../databases/values_db.js";
+import { ErrorResponse } from "../middleware/error-handler.js"
 
 // Mongo
 let api = new users_db();
@@ -20,10 +21,8 @@ const DeviceRoute = {
         const validation = validate(req.params, paramsCecker.create)
         if (!validation.valid) {
             console.log("The JSON validator gave an error: ", validation.errors)
-            res.status(400).send({
-                message: 'JSON validation failed',
-                details: validation.errors.map(e => e.stack)
-            });
+            const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
+            next(err);
             return;
         }
 
@@ -59,63 +58,85 @@ const DeviceRoute = {
             let info = await getInfo()
             let value = await getValues()
 
-            let sendsensor = {
-                "id":info.deviceid,
-                "name":info.devicename,
-                "location":info.location,
-                value
+            let sendsensor={}
+            if(info==null){
+                sendsensor = {
+                    info,
+                    value
+                }
+                
+            }else{
+                sendsensor = {
+                    "id":info.deviceid,
+                    "name":info.devicename,
+                    "location":info.location,
+                    value
+                }
+                
             }
+
             //console.log(sendsenor)        Too much  logging
             res.status(200).send(sendsensor)
+            
         }
     },
     post: (req, res, next) => {
         const data = req.body
         const validation = validate(data, AddSensorChecker.create)
         if (!validation.valid) {
-            res.status(400).send({
-                message: 'JSON validation failed',
-                details: validation.errors.map(e => e.stack)
-
-            })
-            console.log("The JSON validator gave an error: ", validation.errors)
+            const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
+            next(err);
             return;
         }
         api.createDevice(data.deviceid, data.devicename, data.location)
             .then(result => res.status(201).json(result))
             .catch(() => {
-                res.status(500).send({
-                    message: "Failed to write to JSON db",
-                    code: 105
-                })
+                const err = new ErrorResponse(500, 'Failed to write to db');
+			    next(err);
             })
     },
     delete: (req, res, next) => {
         const validation = validate(req.params, paramsCecker.create)
         if (!validation.valid) {
-            console.log("The JSON validator gave an error: ", validation.errors)
-            res.status(400).send({
-                message: 'JSON validation failed',
-                details: validation.errors.map(e => e.stack)
-            });
+            const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
+            next(err)
             return;
         }
-        const data = req.params.id
-        api.deleteDevice(data)
-            .then(result => res.status(201).json(result)) // TODO change status
+        const id = req.params.id
+        api.deleteDevice(id)
+            .then((result) => {
+                if (result.deletedCount < 1) {
+                    // nothing deleted so sensor not found
+                    const err = new ErrorResponse(404, 'Sensor not found');
+                    next(err)
+                } else {
+                    res.status(204).json();
+                }
+            })
     },
     put: (req, res, next) => {
-        const data = req.body;
-        const validation = validate(data, AddSensorChecker.create)
+        const id = req.params.id;
+        const device = req.body;
+
+        // validate body
+        const validation = validate(device, AddSensorChecker.update)
         if (!validation.valid) {
-            res.status(400).send({
-                message: 'JSON validation failed',
-                details: validation.errors.map(e => e.stack)
-            })
+            const err = new ErrorResponse(400, 'JSON validation failed', validation.errors.map(e => e.stack));
+            next(err);
             return;
         }
-        api.putDevice(data.deviceid, data.devicename, data.location, data.firstname, data.lastname)
-            .then(result => res.status(201).json(result)) // TODO change status
+
+        // update device with id in mongo
+        api.putDevice(id, device)
+            .then(result => {
+                if (result.matchedCount < 1) {
+                    // no documents matched
+                    res.status(404).send({ message: "Sensor not found." })
+                } else {
+                    res.status(204).send()
+                }
+            })
+            .catch(err => console.log(err))
     }
 
 }

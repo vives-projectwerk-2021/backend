@@ -12,6 +12,7 @@ import {MetricRoute} from "./routes/metricRoute.js"
 
 import { validate } from "jsonschema";
 import { DataChecker } from "./validation/DataChecker.js";
+import errorHandlerMiddleware from "./middleware/error-handler.js";
 
 const app = express()
 app.use(express.json())
@@ -80,10 +81,13 @@ app.get('/sensors', DeviceRoute.list);
 app.get('/sensors/:id', DeviceRoute.get);
 app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
-app.put('/sensors', DeviceRoute.put); // TODO change to REST
+app.put('/sensors/:id', DeviceRoute.put); // TODO change to REST
 
 // Metrics
 app.get('/metrics', MetricRoute.get);
+
+// handle errors middleware
+app.use(errorHandlerMiddleware)
 
 // Server
 server.listen(config.server.port, () => {

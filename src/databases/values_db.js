@@ -2,7 +2,7 @@ import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
 import {influx_write, influx_read} from "../routes/metricRoute.js";
-
+import buildQuery from "../middleware/query-builder.js"
 
 
 class values_db {
@@ -17,6 +17,7 @@ class values_db {
         console.log("Connecting to the influxDB: " + this.org);
         this.client = new InfluxDB({url: `${config.values_db.baseURL}`, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
+        console.log("Connection to the InfluxDB was succesful!")
     }
 
     async writeData(data) {
@@ -98,40 +99,76 @@ class values_db {
             })
     }
 
-    async readData(id,info) {
-        // for metrics
+    async readData(id,defaultTime) {
+        // For metrics
         influx_read.inc();
         await this.connector();
 
-        // Querying the data from the database
-        const getRows = (query) => {
-            return new Promise((resolve, reject) => {
-              let rows = []
-              this.queryApi.queryRows(query, {
-                next(row, tableMeta) {
-                  rows.push(tableMeta.toObject(row))
-                },
-                error(err) {
-                  reject(err)
-                },
-                complete() {
-                  resolve(rows)
-                }
-              })
-            })
-          }
-        const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: ${info.start}) 
-        |> filter(fn: (r) => r["_measurement"] == "sensors")
-        |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
-        |> aggregateWindow(every: ${info.per}, fn: mean, createEmpty: false)
-        |> yield(name: "mean")`;
-        let rows = getRows(fluxQuery);
-        
-        
-        return rows
+        // Executing the query in the rows function
+        return this.getValuesByTime(id, defaultTime)
     }
+
+    async getValuesByTime(id, defaultTime) {
+      // Setting up the flux query
+      const fluxQuery = buildQuery(id, defaultTime);
+
+        // Executing the flux query
+        const getRows = (query) => {
+          return new Promise((resolve, reject) => {
+            let rows = []
+            this.queryApi.queryRows(query, {
+              next(row, tableMeta) {
+                rows.push(tableMeta.toObject(row))
+              },
+              error(err) {
+                reject(err)
+              },
+              complete() {
+                resolve(rows)
+              }
+            })
+          })
+        }
+
+      // Setting up the rows function and injecting the params
+      const result = (await getRows(fluxQuery))
+
+      // Reformatting the data from influx into a differen JSON object for more easy access in frontend
+      let formattedResult = [];
+
+      for (let i = 0; i < result.length; i++) {
+        const dataReformat = {
+          "time": `${result[i]._time}`,
+          "moisture": [
+              {
+                "value": `${result[i]._value_mLevel1}`,
+                "height": "level 1"
+              },
+              {
+                "value": `${result[i]._value_mLevel2}`,
+                "height": "level 2"
+              },
+              {
+                "value": `${result[i]._value_mLevel3}`,
+                "height": "level 3"
+              },
+              {
+                "value": `${result[i]._value_mLevel4}`,
+                "height": "level 4"
+              }
+            ],
+          "temperature": {
+              "air": `${result[i]._value_tAir}`,
+              "ground": `${result[i]._value_tGround}`
+            },
+          "light": `${result[i]._value_light}`,
+          "battery_voltage": `${result[i]._value_battVoltage}`
+        }
+        formattedResult.push(dataReformat);
+      }
+      return formattedResult;
+    }
+
     
 }
 

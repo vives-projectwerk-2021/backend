@@ -51,20 +51,20 @@ const DeviceRoute = {
         }
 
         async function getValues() {
-            let values = await api2.readData(id, defaultTime)
-            console.log("Length array: " + values.length)
-            return values
+            let values = await api2.readData(id,defaultTime)
+                //console.log("Length array: "+ values.length)
+                return values
         }
 
         async function send() {
             let info = await getInfo()
-            let value = await getValues()
+            let values = await getValues()
 
             let sendsensor={}
             if(info==null){
                 sendsensor = {
                     info,
-                    value
+                    values
                 }
                 
             }else{
@@ -72,7 +72,7 @@ const DeviceRoute = {
                     "id":info.deviceid,
                     "name":info.devicename,
                     "location":info.location,
-                    value
+                    values
                 }
                 
             }

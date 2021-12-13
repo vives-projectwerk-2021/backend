@@ -54,7 +54,7 @@ const SensorValidation = {
             },
 
         },
-        "required": ["name", "location"],
+        "required": ["devicename", "location"],
         "additionalProperties": false
     }
 }

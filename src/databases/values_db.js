@@ -2,7 +2,7 @@ import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
 import {influx_write, influx_read} from "../routes/metricRoute.js";
-import { buildQuery } from "../middleware/query-builder.js"
+import buildQuery from "../middleware/query-builder.js"
 
 
 class values_db {

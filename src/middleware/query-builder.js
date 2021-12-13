@@ -20,7 +20,6 @@ function buildQuery(id, defaultTime) {
           |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
     
         return join(tables: {tAir:tempAir, tGround:tempGround}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
-    
     }
     
     moisValues12 = () => {
@@ -97,3 +96,5 @@ function buildQuery(id, defaultTime) {
     
       return fluxQuery
 }
+
+export default buildQuery;

@@ -14,8 +14,6 @@ This repository consists of the necessary tools to run the PULU website, also kn
 
 - Running scripts
 
-## Versions
-
 - Encrypting and/or decrypting data
 
 - Processing user input

@@ -57,7 +57,7 @@ const DeviceRoute = {
             year: { start: '-1y', per: '1d' },
         }
 
-        // Assinging the standard time
+        // Assigning the standard time
         let defaultTime = mapper[req.query.start]
         if (req.query.start == null) {
             defaultTime = mapper["default"]
@@ -84,18 +84,14 @@ const DeviceRoute = {
                     "location":info.location,
                     values
                 }
-                
             }
 
             async function getInfo() {
-                let info = await api.getDeviceByID(id)
-                return info
+                return await api.getDeviceByID(id)
             }
     
             async function getValues() {
-                let values = await api2.readData(id,defaultTime)
-                    //console.log("Length array: "+ values.length)
-                    return values
+                return await api2.readData(id,defaultTime)
             }
 
             res.status(200).send(sendsensor)

@@ -135,9 +135,9 @@ class values_db {
       |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
       |> filter(fn: (r) => r["_measurement"] == "sensors")
       |> filter(fn: (r) => r["_field"] == "value")
+      |> drop(columns: ["_start", "_stop", "_field"])
       |> aggregateWindow(every: 1d, fn: last, createEmpty: false)
-      |> yield(name: "last")
-      |> drop(columns: ["_start", "_stop"])`
+      |> yield(name: "last")`
 
       const result = await this.getFluxResult(fluxQuery)
 
@@ -147,7 +147,7 @@ class values_db {
 
     async getValuesByTime(id, defaultTime) {
       // Setting up the flux query
-      const fluxQuery = buildQuery(id, defaultTime);
+      const fluxQuery = buildQuery(id, defaultTime, false);
 
       // Executing the Flux request using the Rows functions
       const result = await this.getFluxResult(fluxQuery)

@@ -1,6 +1,13 @@
+import { def } from "@vue/shared";
 import config from "../config/config.js"
 
-function buildQuery(id, defaultTime) {
+class queryBuilder {
+  // Constructor
+  constructor() {
+    
+  }
+
+  buildQuery(id, defaultTime) {
     const fluxQuery = `
     tempValues = () => {
         tempAir = from(bucket: \"${config.values_db.bucket}\")
@@ -96,5 +103,6 @@ function buildQuery(id, defaultTime) {
     
       return fluxQuery
 }
+}
 
-export default buildQuery;
+export default queryBuilder;

@@ -2,7 +2,7 @@ import config from "../config/config.js"
 import { Point } from "@influxdata/influxdb-client";
 import { InfluxDB } from "@influxdata/influxdb-client";
 import {influx_write, influx_read} from "../routes/metricRoute.js";
-
+import { buildQuery } from "../middleware/query-builder.js"
 
 
 class values_db {
@@ -110,14 +110,7 @@ class values_db {
 
     async getValuesByTime(id, defaultTime) {
       // Setting up the flux query
-      const fluxQuery = `from(bucket: \"${config.values_db.bucket}\") 
-        |> range(start: ${defaultTime.start})
-        |> filter(fn: (r) => r["_measurement"] == "sensors")
-        |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
-        |> group(columns: ["_time"])
-        |> yield(name: "mean")`;
+      const fluxQuery = buildQuery(id, defaultTime);
 
         // Executing the flux query
         const getRows = (query) => {

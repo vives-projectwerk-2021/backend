@@ -137,39 +137,34 @@ class values_db {
       // Setting up the rows function and injecting the params
       const result = (await getRows(fluxQuery))
 
-      // Reformatting the data from influx into a differen JSON object for more easy access in frontend
-      let formattedResult = [];
-
-      for (let i = 0; i < result.length; i++) {
-        const dataReformat = {
-          "time": `${result[i]._time}`,
+      // Reformatting the data from influx into a different JSON object for more easy access in frontend
+      let formattedResult = result.map(d => d = {
+        "time": `${d._time}`,
           "moisture": [
               {
-                "value": `${result[i]._value_mLevel1}`,
+                "value": `${d._value_mLevel1}`,
                 "height": "level 1"
               },
               {
-                "value": `${result[i]._value_mLevel2}`,
+                "value": `${d._value_mLevel2}`,
                 "height": "level 2"
               },
               {
-                "value": `${result[i]._value_mLevel3}`,
+                "value": `${d._value_mLevel3}`,
                 "height": "level 3"
               },
               {
-                "value": `${result[i]._value_mLevel4}`,
+                "value": `${d._value_mLevel4}`,
                 "height": "level 4"
               }
             ],
           "temperature": {
-              "air": `${result[i]._value_tAir}`,
-              "ground": `${result[i]._value_tGround}`
+              "air": `${d._value_tAir}`,
+              "ground": `${d._value_tGround}`
             },
-          "light": `${result[i]._value_light}`,
-          "battery_voltage": `${result[i]._value_battVoltage}`
-        }
-        formattedResult.push(dataReformat);
-      }
+          "light": `${d._value_light}`,
+          "battery_voltage": `${d._value_battVoltage}`
+      })
       return formattedResult;
     }
 

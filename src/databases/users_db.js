@@ -1,6 +1,7 @@
 import config from "../config/config.js"
 import { MongoClient } from "mongodb";
 import {mongo_write, mongo_read} from "../routes/metricRoute.js";
+import axios from "axios"
 
 //import CryptoJS from "crypto-js";
 
@@ -14,6 +15,7 @@ class users_db{
         this.dbName= `${config.users_db.db}`;
         this.users=`${config.users_db.ucoll}`;
         this.devices=`${config.users_db.dcoll}`;
+        this.members=`${config.users_db.mcoll}`;
         this.client= "";
         this.mongoUsers="";
         this.mongoDevices="";
@@ -26,6 +28,7 @@ class users_db{
             this.client= new MongoClient(this.url);
             this.mongoUsers=this.client.db(this.dbName).collection(this.users);
             this.mongoDevices=this.client.db(this.dbName).collection(this.devices);
+            this.mongoMembers=this.client.db(this.dbName).collection(this.members);
             console.log(Date.now()+': connecting to database: '+ this.dbName );
             this.client.connect();
             this.isConnected=true;
@@ -106,6 +109,45 @@ class users_db{
         }
         return this.mongoDevices.updateOne({ deviceid: id }, { $set: device })
     }
+
+
+
+    //Members
+
+    async getMembers(){
+        this.ConnectionChecker()
+        mongo_read.inc();
+        let members=await this.mongoMembers.find({}).toArray()
+        if(members[0].time==null){
+            console.log(Date.now()+": getting members")
+            let people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+            let amount=people.data.length
+            mongo_write.inc();
+            this.mongoMembers.insertOne({time:Date.now(),members:amount})
+
+            return amount
+        }else{
+            if(Date.now()-members[0].time>=60*60*1000){
+                console.log(Date.now()+": updating members")
+                let people= await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+                let amount=people.data.length
+                mongo_write.inc();
+                this.mongoMembers.updateOne({_id:members[0]._id},{$set:{time:Date.now(),members:amount}})
+
+                return amount
+                
+            }else{
+                console.log(Date.now()+": returning members")
+
+                return members[0].members
+            }
+        }
+
+
+
+    }
+
+   
 
     async closeConnection(){
         console.log(Date.now()+" : CLOSING CONNECTION")

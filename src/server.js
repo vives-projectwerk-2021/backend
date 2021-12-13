@@ -12,7 +12,9 @@ import {MetricRoute} from "./routes/metricRoute.js"
 
 import { validate } from "jsonschema";
 import { DataChecker } from "./validation/DataChecker.js";
+import { TTN } from "./api/ttn.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
+
 
 const app = express()
 app.use(express.json())
@@ -67,6 +69,21 @@ app.post('/livedata', (req, res) => {
   res.status(201).json(recentLiveData)
 })
 
+app.post('/ttn-device-manager', (req, res) => {
+  let credentials = undefined
+  console.log(req.body)
+  TTN.registerDevice(req.body)
+  .then((ttnRes) => {
+    console.log(ttnRes.data)
+    credentials = ttnRes.data
+    res.status(201).json(credentials)
+  })
+  .catch((err) => {
+    console.log(err)
+    res.status(400).json({"message": "failed to fetch credentials from ttn"})
+  })
+})
+
 
 // Mongo
 // Accounts
@@ -82,6 +99,9 @@ app.get('/sensors/:id', DeviceRoute.get);
 app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
 app.put('/sensors/:id', DeviceRoute.put); // TODO change to REST
+
+// Members
+app.get('/members',DeviceRoute.members);
 
 // Metrics
 app.get('/metrics', MetricRoute.get);

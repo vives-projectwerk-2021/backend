@@ -108,6 +108,10 @@ class values_db {
         return this.getValuesByTime(id, defaultTime)
     }
 
+    async getLastSent(id) {
+
+    }
+
     async getValuesByTime(id, defaultTime) {
       // Setting up the flux query
       const fluxQuery = buildQuery(id, defaultTime);

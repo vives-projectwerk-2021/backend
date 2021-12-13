@@ -12,6 +12,7 @@ let api2 = new values_db();
 const DeviceRoute = {
     list: (req, res, next) => {
         api.showAllDevices().then(result => res.status(201).send(result));
+        console.log(api.showAllDevices())
     },
     get: (req, res, next) => {
         // Host ID

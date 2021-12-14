@@ -158,7 +158,7 @@ const DeviceRoute = {
     members:(req,res,next)=>{
         api.getMembers()
         .then(result=>{
-            console.log(`Result: ${result}`)
+            
             res.status(200).send(`${result}`)
         })
     }

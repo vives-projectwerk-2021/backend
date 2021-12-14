@@ -20,7 +20,9 @@ const config = {
         ucoll: process.env.MONGO_USERSCOLLECTION,
 
         dcoll: process.env.MONGO_DEVICESCOLLECTION,
-        mcoll: process.env.MONGO_MEMBERS
+        mcoll: process.env.MONGO_MEMBERS,
+
+        githubtoken:process.env.GITHUB_TOKEN
     },
     
     ttn_device_manager_base_url: process.env.TTN_DEVICE_MANAGER_BASE_URL

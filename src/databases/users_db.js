@@ -114,14 +114,18 @@ class users_db{
 
     //Members
 
+    
+
     async getMembers(){
         this.ConnectionChecker()
         mongo_read.inc();
         let members=await this.mongoMembers.find({}).toArray()
+
+        
         
         if(members[0]==null){
             console.log(Date.now()+": getting members")
-            let people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+            let people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members",{headers:{Authorization: `Bearer ${config.users_db.githubtoken}`}})
             let amount=people.data.length
             mongo_write.inc();
             this.mongoMembers.insertOne({time:Date.now(),members:amount})

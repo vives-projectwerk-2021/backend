@@ -118,7 +118,8 @@ class users_db{
         this.ConnectionChecker()
         mongo_read.inc();
         let members=await this.mongoMembers.find({}).toArray()
-        if(members[0].time==null){
+        
+        if(members[0]==null){
             console.log(Date.now()+": getting members")
             let people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
             let amount=people.data.length

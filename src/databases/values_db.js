@@ -128,26 +128,21 @@ class values_db {
       return (await getRows(fluxQuery))
     }
 
-    async getLastSent(IDs) {
+    async getLastSent(IDs, defaultTime) {
       // Query for getting the last data every day last 7 days
-      const fluxQuery = `from(bucket: "${config.values_db.bucket}")
-      |> range(start: -7d)
-      |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
-      |> filter(fn: (r) => r["_measurement"] == "sensors")
-      |> filter(fn: (r) => r["_field"] == "value")
-      |> drop(columns: ["_start", "_stop", "_field"])
-      |> aggregateWindow(every: 1d, fn: last, createEmpty: false)
-      |> yield(name: "last")`
-
-      const result = await this.getFluxResult(fluxQuery)
-
-      return result;
+      let results = []
+      for (let i = 0; i < IDs.length; i++) {
+        const fluxQuery = new buildQuery(IDs[i], defaultTime, true).buildQuery();
+        results.push((await this.getFluxResult(fluxQuery)));
+      }
+      console.log(results)
+      return results;
 
     }
 
     async getValuesByTime(id, defaultTime) {
       // Setting up the flux query
-      const fluxQuery = buildQuery(id, defaultTime, false);
+      const fluxQuery = new buildQuery(id, defaultTime, false).buildQuery();
 
       // Executing the Flux request using the Rows functions
       const result = await this.getFluxResult(fluxQuery)

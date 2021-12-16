@@ -3,88 +3,95 @@ import config from "../config/config.js"
 
 class queryBuilder {
   // Constructor
-  constructor() {
-    
+  constructor(ID, defaultTime, lastInfo) {
+    this.ID = ID;
+    this.defaultTime = defaultTime;
+    this.lastInfo = lastInfo;    
   }
 
-  buildQuery(id, defaultTime) {
+  buildQuery() {
+    // TODO increase performance of these queries!!
+    if (this.lastInfo) {
+      console.log("Hier geraak ik");
+      this.defaultTime = { start: '-7d', per: '30m' };
+    }
     const fluxQuery = `
     tempValues = () => {
         tempAir = from(bucket: \"${config.values_db.bucket}\")
-          |> range(start: ${defaultTime.start})
+          |> range(start: ${this.defaultTime.start})
           |> filter(fn: (r) => r["_measurement"] == "sensors")
           |> filter(fn: (r) => r["_field"] == "value")
-          |> filter(fn: (r) => r["host"] == "${id}")
+          |> filter(fn: (r) => r["host"] == "${this.ID}")
           |> filter(fn: (r) => r["temperature"] == "air")
-          |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+          |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
       
         tempGround = from(bucket: \"${config.values_db.bucket}\")
-          |> range(start: ${defaultTime.start})
+          |> range(start: ${this.defaultTime.start})
           |> filter(fn: (r) => r["_measurement"] == "sensors")
           |> filter(fn: (r) => r["_field"] == "value")
-          |> filter(fn: (r) => r["host"] == "${id}")
+          |> filter(fn: (r) => r["host"] == "${this.ID}")
           |> filter(fn: (r) => r["temperature"] == "ground")
-          |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+          |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
         return join(tables: {tAir:tempAir, tGround:tempGround}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
     }
     
     moisValues12 = () => {
       moisture1 = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["moisture"] == "level1")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
       moisture2 = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["moisture"] == "level2")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
         return join(tables: {mLevel1:moisture1, mLevel2:moisture2}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
     }
     
     moisValues34 = () => {
       moisture3 = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["moisture"] == "level3")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
       moisture4 = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["moisture"] == "level4")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
         return join(tables: {mLevel3:moisture3, mLevel4:moisture4}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
     }
     
     lightBattVolt = () => {
       lightValue = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["type"] == "light")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
       battVoltValue = from(bucket: \"${config.values_db.bucket}\")
-        |> range(start: ${defaultTime.start})
+        |> range(start: ${this.defaultTime.start})
         |> filter(fn: (r) => r["_measurement"] == "sensors")
         |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["host"] == "${id}")
+        |> filter(fn: (r) => r["host"] == "${this.ID}")
         |> filter(fn: (r) => r["voltage"] == "battery")
-        |> aggregateWindow(every: ${defaultTime.per}, fn: mean, createEmpty: false)
+        |> aggregateWindow(every: ${this.defaultTime.per}, fn: mean, createEmpty: false)
     
         return join(tables: {light:lightValue, battVoltage:battVoltValue}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
     }

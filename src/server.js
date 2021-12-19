@@ -95,7 +95,7 @@ app.delete('/users', UserRoute.delete);
 
 // Sensors
 app.get('/sensors', DeviceRoute.list);
-app.get('/sensors/:id', DeviceRoute.get);
+app.get('/sensors/:id/:start', DeviceRoute.get);
 app.post('/sensors', DeviceRoute.post);
 app.delete('/sensors/:id', DeviceRoute.delete); 
 app.put('/sensors/:id', DeviceRoute.put); // TODO change to REST

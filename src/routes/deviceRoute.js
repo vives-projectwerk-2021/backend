@@ -30,17 +30,17 @@ const DeviceRoute = {
 
         // Mapper with default values
         let mapper = {
-            default: { start: '-1h', per: '15s' },
-            hour: { start: '-1h', per: '15s' },
-            day: { start: '-1d', per: '5m' },
-            week: { start: '-7d', per: '30m' },
-            month: { start: '-1mo', per: '2h' },
+            default: { start: '-1h', per: '1m' },
+            hour: { start: '-1h', per: '1m' },
+            day: { start: '-1d', per: '30m' },
+            week: { start: '-7d', per: '2h' },
+            month: { start: '-1mo', per: '12h' },
             year: { start: '-1y', per: '1d' },
         }
 
         // Assinging the standard time
-        let defaultTime = mapper[req.query.start]
-        if (req.query.start == null) {
+        let defaultTime = mapper[req.params.start]
+        if (req.params.start == null) {
             defaultTime = mapper["default"]
         }
 

@@ -6,6 +6,9 @@ const paramsCecker = {
             "id": {
                 "type": "string",
                 "pattern": "^[\\d,a-f]{24}$"
+            },
+            "start": {
+                "type": "string"
             }
         },
         "required": ["id"],

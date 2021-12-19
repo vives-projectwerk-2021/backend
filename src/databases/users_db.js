@@ -114,14 +114,24 @@ class users_db{
 
     //Members
 
+    
+
     async getMembers(){
         this.ConnectionChecker()
         mongo_read.inc();
         let members=await this.mongoMembers.find({}).toArray()
+
+
+        let people="";
         
         if(members[0]==null){
             console.log(Date.now()+": getting members")
-            let people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+            if(config.users_db.githubtoken!=""){
+                people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members",{headers:{Authorization: `Bearer ${config.users_db.githubtoken}`}})
+
+            }else{
+                people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+            }
             let amount=people.data.length
             mongo_write.inc();
             this.mongoMembers.insertOne({time:Date.now(),members:amount})
@@ -130,7 +140,12 @@ class users_db{
         }else{
             if(Date.now()-members[0].time>=60*60*1000){
                 console.log(Date.now()+": updating members")
-                let people= await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+                if(config.users_db.githubtoken!=""){
+                    people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members",{headers:{Authorization: `Bearer ${config.users_db.githubtoken}`}})
+    
+                }else{
+                    people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members")
+                }
                 let amount=people.data.length
                 mongo_write.inc();
                 this.mongoMembers.updateOne({_id:members[0]._id},{$set:{time:Date.now(),members:amount}})

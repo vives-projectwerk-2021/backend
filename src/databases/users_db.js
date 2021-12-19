@@ -121,12 +121,12 @@ class users_db{
         mongo_read.inc();
         let members=await this.mongoMembers.find({}).toArray()
 
-
+        
         let people="";
         
         if(members[0]==null){
             console.log(Date.now()+": getting members")
-            if(config.users_db.githubtoken!=""){
+            if(config.users_db.githubtoken!=""&&config.users_db.githubtoken!=null){
                 people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members",{headers:{Authorization: `Bearer ${config.users_db.githubtoken}`}})
 
             }else{
@@ -140,7 +140,7 @@ class users_db{
         }else{
             if(Date.now()-members[0].time>=60*60*1000){
                 console.log(Date.now()+": updating members")
-                if(config.users_db.githubtoken!=""){
+                if(config.users_db.githubtoken!=""&&config.users_db.githubtoken!=null){
                     people = await axios.get("https://api.github.com/orgs/vives-projectwerk-2021/members",{headers:{Authorization: `Bearer ${config.users_db.githubtoken}`}})
     
                 }else{

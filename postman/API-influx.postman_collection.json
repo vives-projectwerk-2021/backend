@@ -1,0 +1,63 @@
+{
+	"info": {
+		"_postman_id": "1bccd7fd-4cfa-4906-abb7-78b60dc148ab",
+		"name": "API-influx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET lastSentInformation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/sensors/37003a000d5047394b373320?start=2021-11-27T09:00:00.000Z&stop=2021-11-27T12:00:00.000Z",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sensors",
+						"37003a000d5047394b373320"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2021-11-27T09:00:00.000Z"
+						},
+						{
+							"key": "stop",
+							"value": "2021-11-27T12:00:00.000Z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET sensorData",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/sensors/2c004e0005504e3942363620?start=day",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sensors",
+						"2c004e0005504e3942363620"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "day"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

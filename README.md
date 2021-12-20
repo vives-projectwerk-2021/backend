@@ -51,7 +51,7 @@ After you have succesfully cloned the repository the next step is actually runni
 ```bash
 cd pulu-backend
 npm install
-node src/server.js
+npm run dev2
 ```
 
 After installing the dependencies the project is now running at **port 3000**. To test your backend you can use an API Client such as Postman or Insomnia. We have already created some [standard HTTP requests](#postman-requests) for you to test out the backend using Postman.

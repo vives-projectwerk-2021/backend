@@ -135,9 +135,7 @@ class values_db {
         const fluxQuery = new buildQuery(IDs[i], defaultTime, true).buildQuery();
         results.push((await this.getFluxResult(fluxQuery)));
       }
-      console.log(results.map(d => d[0]).filter(v => v !== undefined))
       return this.formatResult(results.map(d => d[0]).filter(v => v !== undefined));
-
     }
 
     async getValuesByTime(id, defaultTime) {

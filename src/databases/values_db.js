@@ -135,7 +135,7 @@ class values_db {
         const fluxQuery = new buildQuery(IDs[i], defaultTime, true).buildQuery();
         results.push((await this.getFluxResult(fluxQuery)));
       }
-      console.log(results)
+      
       return results;
 
     }

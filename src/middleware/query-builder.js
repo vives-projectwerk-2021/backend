@@ -12,7 +12,7 @@ class queryBuilder {
   buildQuery() {
     // TODO increase performance of these queries!!
     if (this.lastInfo) {
-      console.log("Hier geraak ik");
+      
       this.defaultTime = { start: '-7d', per: '30m' };
     }
     const fluxQuery = `

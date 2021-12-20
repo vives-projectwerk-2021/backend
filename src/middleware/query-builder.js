@@ -5,16 +5,18 @@ class queryBuilder {
   // Constructor
   constructor(ID, defaultTime, lastInfo) {
     this.ID = ID;
-    this.defaultTime = defaultTime;
-    this.lastInfo = lastInfo;    
+    if (lastInfo) {
+      this.defaultTime = { start: '-7d', per: '30m' };
+    } else {
+      this.defaultTime = defaultTime
+    }
+    this.lastInfo = lastInfo;
+    this.getLastValue = `  |> sort(columns: ["_time"], desc: true)
+    |> first(column: "_time")`
   }
 
   buildQuery() {
     // TODO increase performance of these queries!!
-    if (this.lastInfo) {
-      console.log("Hier geraak ik");
-      this.defaultTime = { start: '-7d', per: '30m' };
-    }
     const fluxQuery = `
     tempValues = () => {
         tempAir = from(bucket: \"${config.values_db.bucket}\")
@@ -107,8 +109,12 @@ class queryBuilder {
     
     join(tables: {moisLevels:joinMoistureLevels(), other:joinTempLightBattValues()}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
       |> drop(columns: ["_field","_start","_stop","moisture_mLevel1","moisture_mLevel2", "moisture_mLevel3","moisture_mLevel4", "type", "voltage", "temperature_tAir", "temperature_tGround"])`;
+
+      if (this.lastInfo) {
+        return fluxQuery + this.getLastValue;
+      }
     
-      return fluxQuery
+      return fluxQuery;
 }
 }
 

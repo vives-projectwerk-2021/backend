@@ -1,20 +1,20 @@
 //------------------------------------------- Temperatures
 tempValues = () => {
     tempAir = from(bucket: "pulu")
-      |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+      |> range(start: v.timeRangeStart)
       |> filter(fn: (r) => r["_measurement"] == "sensors")
       |> filter(fn: (r) => r["_field"] == "value")
       |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
       |> filter(fn: (r) => r["temperature"] == "air")
-      |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+      |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
   
     tempGround = from(bucket: "pulu")
-      |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+      |> range(start: v.timeRangeStart)
       |> filter(fn: (r) => r["_measurement"] == "sensors")
       |> filter(fn: (r) => r["_field"] == "value")
       |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
       |> filter(fn: (r) => r["temperature"] == "ground")
-      |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+      |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
     return join(tables: {tAir:tempAir, tGround:tempGround}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
 
@@ -23,20 +23,20 @@ tempValues = () => {
 //------------------------------------------- Moisture Levels 1 & 2
 moisValues12 = () => {
   moisture1 = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["moisture"] == "level1")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
   moisture2 = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["moisture"] == "level2")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
     return join(tables: {mLevel1:moisture1, mLevel2:moisture2}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
 }
@@ -44,20 +44,20 @@ moisValues12 = () => {
 //------------------------------------------- Moisture Levels 3 & 4
 moisValues34 = () => {
   moisture3 = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["moisture"] == "level3")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
   moisture4 = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["moisture"] == "level4")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
     return join(tables: {mLevel3:moisture3, mLevel4:moisture4}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
 }
@@ -65,20 +65,20 @@ moisValues34 = () => {
 //------------------------------------------- Light and Battery voltages
 lightBattVolt = () => {
   lightValue = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["type"] == "light")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
   battVoltValue = from(bucket: "pulu")
-    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> range(start: v.timeRangeStart)
     |> filter(fn: (r) => r["_measurement"] == "sensors")
     |> filter(fn: (r) => r["_field"] == "value")
     |> filter(fn: (r) => r["host"] == "2c004e0005504e3942363620")
     |> filter(fn: (r) => r["voltage"] == "battery")
-    |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+    |> aggregateWindow(every: 30m, fn: mean, createEmpty: false)
 
     return join(tables: {light:lightValue, battVoltage:battVoltValue}, on: ["_time", "_stop", "_start", "_field", "_measurement", "host"])
 }

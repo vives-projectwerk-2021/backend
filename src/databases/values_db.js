@@ -6,7 +6,7 @@ import buildQuery from "../middleware/query-builder.js"
 
 
 class values_db {
-    // Constructor for the influx class
+    // Constructor for the Influx class
     constructor() {
         this.token = `${config.values_db.token}`;
         this.org = `${config.values_db.organization}`;
@@ -15,13 +15,16 @@ class values_db {
     }
 
     connector() {
+        // Making connection to the Influx DB
         console.log("Connecting to the influxDB: " + this.org);
         this.client = new InfluxDB({url: `${config.values_db.baseURL}`, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
         console.log("Connection to the InfluxDB was succesful!")
     }
 
+    // Writing data as Points to Influx DB
     async writeData(data) {
+        // Making the WriteAPI to call later
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: data.data.device_id })
 
@@ -150,6 +153,7 @@ class values_db {
     }
 
     formatResult(result) {
+      // Formatting the results to an easy-readable JSON object
       return result.map(d => d = {
         "host": `${d.host}`,
         "time": `${d._time}`,

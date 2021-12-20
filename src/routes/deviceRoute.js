@@ -15,23 +15,33 @@ const DeviceRoute = {
 
         // Functions
         async function send() {
+            let info = ""
             let IDs = await getIDs()
             let lastValues = await getLastValues(IDs)
 
+            mixer()
+
             async function getIDs() {
-                return (await api.showAllDevices()).map(d => d.deviceid)
+                info = await api.showAllDevices()
+                return (info.map(d => d.deviceid))
             }
 
             async function getLastValues(IDs) {
                 return api2.getLastSent(IDs);
             }
 
-            const result = {
-                "ID's": IDs,
-                "values": lastValues
+            async function mixer() {
+                for(let device in info) {
+                    for(let value in lastValues) {
+                        if(lastValues[value].host==info[device].deviceid) {
+                            info[device].lastSend=lastValues[value]
+                        } else {
+                            info[device].lastSend = "None"
+                        }
+                    }
+                }
             }
-
-            res.send(result)
+            res.send(info)
         }        
     },
     get: (req, res, next) => {

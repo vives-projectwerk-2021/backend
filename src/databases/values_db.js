@@ -135,7 +135,8 @@ class values_db {
         const fluxQuery = new buildQuery(IDs[i], defaultTime, true).buildQuery();
         results.push((await this.getFluxResult(fluxQuery)));
       }
-      return results.map(d => d[0]).filter(v => v !== undefined);
+      console.log(results.map(d => d[0]).filter(v => v !== undefined))
+      return this.formatResult(results.map(d => d[0]).filter(v => v !== undefined));
 
     }
 
@@ -147,7 +148,12 @@ class values_db {
       const result = await this.getFluxResult(fluxQuery)
 
       // Reformatting the data from influx into a different JSON object for more easy access in frontend
-      let formattedResult = result.map(d => d = {
+      return this.formatResult(result);
+    }
+
+    formatResult(result) {
+      return result.map(d => d = {
+        "host": `${d.host}`,
         "time": `${d._time}`,
           "moisture": [
               {
@@ -173,11 +179,8 @@ class values_db {
             },
           "light": `${d._value_light}`,
           "battery_voltage": `${d._value_battVoltage}`
-      })
-      return formattedResult;
+      });
     }
-
-    
 }
 
 export default values_db;

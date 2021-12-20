@@ -53,14 +53,6 @@ const DeviceRoute = {
                 }
             }
 
-            
-
-            
-
-            const result = {
-                info
-            }
-
             res.send(info)
         }        
     },

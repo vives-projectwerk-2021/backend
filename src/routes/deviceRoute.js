@@ -61,10 +61,10 @@ const DeviceRoute = {
         let mapper = {
             default: { start: '-1h', per: '15s' },
             hour: { start: '-1h', per: '15s' },
-            day: { start: '-1d', per: '5m' },
-            week: { start: '-7d', per: '30m' },
-            month: { start: '-1mo', per: '2h' },
-            year: { start: '-1y', per: '1d' },
+            day: { start: '-1d', per: '15m' },
+            week: { start: '-7d', per: '1h' },
+            month: { start: '-1mo', per: '6h' },
+            year: { start: '-1y', per: '3d' },
         }
 
         // Assigning the standard time

@@ -35,10 +35,11 @@ const DeviceRoute = {
                     for(let value in lastValues) {
                         if(lastValues[value].host==info[device].deviceid) {
                             info[device].lastSend=lastValues[value]
-                        } else {
-                            info[device].lastSend = "None"
                         }
                     }
+                    if(info[device].lastSend==null){
+                        info[device].lastSend="None"
+                    } 
                 }
             }
             res.send(info)

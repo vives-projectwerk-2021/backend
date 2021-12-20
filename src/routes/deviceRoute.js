@@ -33,9 +33,6 @@ const DeviceRoute = {
 
             async function mixer(){
                 
-                console.log(IDs)
-                console.log(lastValues[5])
-
                 
                 for(let device in info){
                     for(let last in lastValues[5]){

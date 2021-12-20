@@ -11,9 +11,38 @@ let api2 = new values_db();
 
 const DeviceRoute = {
     list: (req, res, next) => {
-        api.showAllDevices()
-            .then(result => res.status(200).send(result))
-            .catch((err) => console.log(err));
+        send()
+
+        // Functions
+        async function send() {
+            let info = ""
+            let IDs = await getIDs()
+            let lastValues = await getLastValues(IDs)
+
+            mixer()
+
+            async function getIDs() {
+                info = await api.showAllDevices()
+                return (info.map(d => d.deviceid))
+            }
+
+            async function getLastValues(IDs) {
+                return api2.getLastSent(IDs);
+            }
+
+            async function mixer() {
+                for(let device in info) {
+                    for(let value in lastValues) {
+                        if(lastValues[value].host==info[device].deviceid) {
+                            info[device].lastSend=lastValues[value]
+                        } else {
+                            info[device].lastSend = "None"
+                        }
+                    }
+                }
+            }
+            res.send(info)
+        }        
     },
     get: (req, res, next) => {
         // Host ID
@@ -38,24 +67,15 @@ const DeviceRoute = {
             year: { start: '-1y', per: '1d' },
         }
 
-        // Assinging the standard time
+        // Assigning the standard time
         let defaultTime = mapper[req.query.start]
         if (req.query.start == null) {
             defaultTime = mapper["default"]
         }
 
         send()
-        async function getInfo() {
-            let info = await api.getDeviceByID(id)
-            return info
-        }
 
-        async function getValues() {
-            let values = await api2.readData(id,defaultTime)
-                //console.log("Length array: "+ values.length)
-                return values
-        }
-
+        // Functions
         async function send() {
             let info = await getInfo()
             let values = await getValues()
@@ -67,17 +87,23 @@ const DeviceRoute = {
                     values
                 }
                 
-            }else{
+            } else {
                 sendsensor = {
                     "id":info.deviceid,
                     "name":info.devicename,
                     "location":info.location,
                     values
                 }
-                
             }
 
-            //console.log(sendsenor)        Too much  logging
+            async function getInfo() {
+                return await api.getDeviceByID(id)
+            }
+    
+            async function getValues() {
+                return await api2.readData(id,defaultTime)
+            }
+
             res.status(200).send(sendsensor)
             
         }

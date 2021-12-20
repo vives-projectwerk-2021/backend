@@ -11,9 +11,10 @@ class values_db {
         this.token = `${config.values_db.token}`;
         this.org = `${config.values_db.organization}`;
         this.bucket = `${config.values_db.bucket}`;
+        this.connector();        
     }
 
-    async connector() {
+    connector() {
         console.log("Connecting to the influxDB: " + this.org);
         this.client = new InfluxDB({url: `${config.values_db.baseURL}`, token: this.token});
         this.queryApi = this.client.getQueryApi(this.org);
@@ -21,7 +22,6 @@ class values_db {
     }
 
     async writeData(data) {
-        await this.connector();
         const writeApi = this.client.getWriteApi(this.org, this.bucket)
         writeApi.useDefaultTags({host: data.data.device_id })
 
@@ -102,70 +102,78 @@ class values_db {
     async readData(id,defaultTime) {
         // For metrics
         influx_read.inc();
-        await this.connector();
 
         // Executing the query in the rows function
         return this.getValuesByTime(id, defaultTime)
     }
 
+    async getFluxResult(fluxQuery) {
+      // Executing the flux query
+      const getRows = (query) => {
+        return new Promise((resolve, reject) => {
+          let rows = []
+          this.queryApi.queryRows(query, {
+            next(row, tableMeta) {
+              rows.push(tableMeta.toObject(row))
+            },
+            error(err) {
+              reject(err)
+            },
+            complete() {
+              resolve(rows)
+            }
+          })
+        })
+      }
+      return (await getRows(fluxQuery))
+    }
+
+    async getLastSent(IDs, defaultTime) {
+      // Query for getting the last data every day last 7 days
+      let results = []
+      for (let i = 0; i < IDs.length; i++) {
+        const fluxQuery = new buildQuery(IDs[i], defaultTime, true).buildQuery();
+        results.push((await this.getFluxResult(fluxQuery)));
+      }
+      return results.map(d => d[0]).filter(v => v !== undefined);
+
+    }
+
     async getValuesByTime(id, defaultTime) {
       // Setting up the flux query
-      const fluxQuery = buildQuery(id, defaultTime);
+      const fluxQuery = new buildQuery(id, defaultTime, false).buildQuery();
 
-        // Executing the flux query
-        const getRows = (query) => {
-          return new Promise((resolve, reject) => {
-            let rows = []
-            this.queryApi.queryRows(query, {
-              next(row, tableMeta) {
-                rows.push(tableMeta.toObject(row))
-              },
-              error(err) {
-                reject(err)
-              },
-              complete() {
-                resolve(rows)
-              }
-            })
-          })
-        }
+      // Executing the Flux request using the Rows functions
+      const result = await this.getFluxResult(fluxQuery)
 
-      // Setting up the rows function and injecting the params
-      const result = (await getRows(fluxQuery))
-
-      // Reformatting the data from influx into a differen JSON object for more easy access in frontend
-      let formattedResult = [];
-
-      for (let i = 0; i < result.length; i++) {
-        const dataReformat = {
-          "time": `${result[i]._time}`,
+      // Reformatting the data from influx into a different JSON object for more easy access in frontend
+      let formattedResult = result.map(d => d = {
+        "time": `${d._time}`,
           "moisture": [
               {
-                "value": `${result[i]._value_mLevel1}`,
+                "value": `${d._value_mLevel1}`,
                 "height": "level 1"
               },
               {
-                "value": `${result[i]._value_mLevel2}`,
+                "value": `${d._value_mLevel2}`,
                 "height": "level 2"
               },
               {
-                "value": `${result[i]._value_mLevel3}`,
+                "value": `${d._value_mLevel3}`,
                 "height": "level 3"
               },
               {
-                "value": `${result[i]._value_mLevel4}`,
+                "value": `${d._value_mLevel4}`,
                 "height": "level 4"
               }
             ],
           "temperature": {
-              "air": `${result[i]._value_tAir}`,
-              "ground": `${result[i]._value_tGround}`
+              "air": `${d._value_tAir}`,
+              "ground": `${d._value_tGround}`
             },
-          "light": `${result[i]._value_light}`,
-          "battery_voltage": `${result[i]._value_battVoltage}`
-        }
-        formattedResult.push(dataReformat);
-      }
+          "light": `${d._value_light}`,
+          "battery_voltage": `${d._value_battVoltage}`
+      })
       return formattedResult;
     }
 

@@ -84,6 +84,18 @@ app.post('/ttn-device-manager', (req, res) => {
   })
 })
 
+app.delete('/ttn-device-manager/:id', (req, res) => {
+  TTN.removeDevice(req.params.id)
+  .then((ttnRes) => {
+    console.log(ttnRes.data)
+    res.status(200).json({"message": "Device removed from TTN"})
+  })
+  .catch((err) => {
+    console.log(err)
+    res.status(400).json({"message": "failed to remove device from ttn"})
+  })
+})
+
 
 // Mongo
 // Accounts
@@ -113,4 +125,3 @@ app.use(errorHandlerMiddleware)
 server.listen(config.server.port, () => {
   console.log(`Listening on port ${config.server.port}`)
 })
-
